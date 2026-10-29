@@ -1,0 +1,110 @@
+// src/components/common/Carousel/Carousel.module.scss
+.carouselContainer {
+  position: relative; // 버튼·인디케이터를 이 영역 기준으로 겹쳐 배치
+  width: 100%;
+  height: 100%;
+  overflow: hidden; // 현재 슬라이드 밖은 잘라서 한 장만 보이게 함
+  background-color: black;  
+}
+
+.carouselTrack {
+  display: flex; // 슬라이드를 가로로 나열
+  height: 100%;
+  transition: transfrom 0.3s ease-in-out; // 트랙이 움직일 때 0.3초 동안 전환
+}
+
+.carouselSlide {
+  flex: 0 0 100%; // 슬라이드 한 장이 컨테이너 너비를 그대로 차지
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.carouselButton {
+  position: absolute; // 이미지 위에 버튼을 겹쳐 올림
+  top: 50%;
+  transform: translateY(-50%); // 세로 중앙 정렬
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &.prev { left: 16px; } // 이전 버튼
+  &.nex  { right: 16px; } // 다음 버튼
+
+  i {
+    font-size: 16px;
+  }
+}
+
+.indicators {
+  position: absolute; // 슬라이드 하단 위에 점 목록을 겹쳐 배치
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 4px;  
+}
+
+.indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;  
+
+  &.active {
+    background: white; // 현재 보고 있는 슬라이드 표시
+  }
+}
+
+// src/components/common/Carousel/Carousel.module.scss
+
+.doubleClickHeart {
+  position: absolute; // 이미지 정중앙에 하트를 겹쳐 표시
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.1);
+  z-index: 10;
+  color: rgba(255, 255, 255, 0.8);  
+  font-size: 100px;
+  animation: heartPop 0.8s ease-out; // 커졌다가 사라지는 애니메이션
+  pointer-events: none; // 하트가 클릭을 가로채지 않음
+}
+
+// 작게 나타났다 커지고, 끝에 투명해지며 사라짐
+@keyframes heartPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.1);
+  }  
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  45% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
