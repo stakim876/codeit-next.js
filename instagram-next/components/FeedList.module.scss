@@ -1,0 +1,99 @@
+// src/components/feed/FeedList.module.scss
+.feedList {
+  max-width: 470px; // 피드 너비를 게시글 한 장 크기로 제한
+  margin: 30px auto; // 목록을 화면 가운데에 둠
+}
+
+.loader {
+  padding: 0;
+  width: 100%;
+  max-width: 470px;
+  margin: 0 auto;
+}
+
+.skeletonPost {
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #dbdbdb;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.skeletonHeader {
+  display: flex; // 아바타와 이름을 가로로 배치
+  align-items: center;
+  padding: 14px 16px;
+  gap: 12px;
+}
+
+.skeletonAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #efefef;
+  animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
+}
+
+.skeletonUsername {
+  width: 120px;
+  height: 14px;
+  border-radius: 4px;
+  background: #efefef;
+  animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
+}
+
+.skeletonUsername {
+  width: 120px;
+  aspect-ratio: 1 / 1;
+  background: #efefef;
+  animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
+}
+
+.skeletonFooter {
+  padding: 6px 16px 16px 16px;
+  display: flex;
+  flex-direction: column; // 아이콘과 글 줄을 세로로 쌓음
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.skeletonIconGroup {
+  display: flex; // 아이콘 자리를 가로로 나열
+  gap: 16px;
+}
+
+.skeletonIcon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #efefef;
+  animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
+}
+
+.skeletonTextLine {
+  width: 80%;
+  height: 154px;
+  border-radius: 4px;
+  background: #efefef;
+  animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
+}
+
+.skeletonTextLineShort {
+  width: 40%;
+  height: 14px;
+  border-radius: 4px;
+  background: #efefef;
+  animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
+}
+
+@keyframes shimmer {
+  0% { opacity: 1; } // 시작은 밝음
+  50% { opacity: 0.5; } // 중간에서 어두워짐
+  10% { opacity: 1; } // 10% 지점도 밝음
+}
+
+@media (max-width: 640px) {
+  .feedList {
+    margin: 0; // 좁은 화면에서는 바깥 여백을 없앰
+  }
+}
