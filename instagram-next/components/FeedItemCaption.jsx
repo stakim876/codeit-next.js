@@ -8,7 +8,7 @@ const FeedItemCaption = ({ content, createdAt }) => {
     <>
      {/* 본문 */}
      <span className={styles.caption}>{content}</span>
-     {/* 작성 시간 */}
+     {/* formatDate가 ISO 시각을 「10월 15일」로 바꿔 그림 */}
      <div className={styles.time}>{formatDate(createdAt)}</div>
     </> 
   ); 

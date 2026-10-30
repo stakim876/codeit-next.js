@@ -1,0 +1,153 @@
+// src/pages/profile/ProfilePage.module.scss
+
+.profileMain {
+  flex: 1; // 사이드바를 뺀 남은 가로 공간을 채움
+  max-width: 935px; // 프로필 본문 최대 너비
+  padding: 30px 20px 0;
+  margin: 0 auto;
+  margin-left: calc(244px + ((100% - 935px - 244px) / 2)); // 왼쪽 사이드바 244px을 비우고 나머지를 가운데에 둠
+}
+
+.profileHeader {
+  display: flex; // 사진과 계정 정보를 한 줄에 둠
+  margin-bottom: 44px;
+  padding: 0 30px;
+}
+
+/* 프로필 이미지 */
+.profileImageContainer {
+  flex: 0 0 290px; // 사진 칸 너비를 290px로 고정
+  margin-right: 30px;
+  display: flex;
+  justify-content: center; // 사진을 칸 가운데에 둠
+}
+
+.profileInfo {
+  flex: 1; // 이름·통계가 남은 가로를 채움
+}
+
+/* 사용자명과 버튼 */
+.profileActions {
+  display: flex; // 아이디와 버튼을 가로로 둠
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.username {
+  font-size: 20px;
+  font-weight: 400;
+  margin-right: 20px;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.profileEditButton,
+.followButton,
+.messageButton,
+.settingsButton {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.profileEditButton,
+.messageButton {
+  background-color: #efefef;
+  color: #000;
+}
+
+.followButton {
+  background-color: #0095f6;
+  color: white;
+  
+  &.following {
+    background-color: #efefef;
+    color: #262626;
+
+    &:hover {
+      background-color: #262626;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      background-color: #363636;
+      color: #fafafa;
+
+      &:hover {
+        background-color: #dbdbdb;
+      }
+    }  
+  }
+}
+
+.settingsButton {
+  padding: 8px;
+  background-color: transparent;
+}
+ 
+/* 통계 정보*/
+.profileStats {
+  display: flex; // 게시물·팔로워·팔로우를 한 줄에 둠
+  list-style: none; // 목록 앞 점을 없앰
+  padding: 0;
+  margin: 0 0 20px;
+  gap: 40px; // 항목 사이 간격
+}
+
+.profileStats li {
+  font-size: 16px;
+}
+
+.statsNumber {
+  font-weight: 600; // 숫자만 굵게
+}
+
+/* 프로필 소개 */
+.profileBio {
+  max-width: 400px;
+}
+
+.fullName {
+  display: block; // 이름을 다음 줄로 내림
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/*반응형*/
+@media (max-width: 768px) {
+  .profileMain {
+    margin-left: 72px; // 좁아진 사이드바 너비만큼만 띄움
+    padding: 30px 0 0;
+  }
+
+  .profileHeader {
+    flex-direction: column; // 사진 아래 계정 정보를 쌓음
+    align-items: center;
+    text-align: center;
+  }
+
+  .profileImageContainer {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .profileActions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .profileStats {
+    justify-content: center; // 통계를 가운데로 모음
+  }
+
+  .profileBio {
+    text-align: center;
+    margin: 0 auto;
+  }
+}  

@@ -39,7 +39,7 @@ const FeedItemActions = ({ likeCount }) => {
         <FaRegBookmark />
        </button>
       </div>
-     {/* 좋아요 개수 */}
+     {/* toLocaleString()이 1300을 1,300처럼 천 단위로 끊음 */}
      <div className={styles.likes}>
        좋아요 <span>{likeCount.toLocaleString()}</span>개
     </div>

@@ -1,113 +1,206 @@
+// src/components/feed/FeedItem.module.scss
 .post {
-  background: #fff;
-  border: 1px solid #dbdbdb;
+  background-color: #fff;
   border-radius: 8px;
-}
-
-.header,
-.userInfo {
-  display: flex;
-  align-items: center;
+  border: 1px solid #dbdbdb;
+  margin-bottom: 24px;
+  
+  @media (max-width: 640px) {
+    border-radius: 0; // 좁은 화면에서는 카드 모서리를 없앰
+    border-left: none; // 좌우 테두리를 없애 화면 너비에 붙임
+    border-right: none;
+  }
 }
 
 .header {
-  justify-content: space-between;
-  padding: 12px 16px;
+   display: flex; // 프로필과 더보기를 한 줄에 둠
+   align-items: center;
+   justify-content: space-between; // 이름은 왼쪽, 더보기는 오른쪽
+   padding: 14px 16px;  
+}
+
+.userInfo {
+   display: flex; // 작은 프로필과 이름을 가로로 둠
+   align-items: center;
+   gap: 12px; // 사진과 이름 사이 간격
+}
+
+.profileLink {
+  text-decoration: none;  
 }
 
 .profileImage {
-  width: 32px;
+  width: 32px; // 피드 헤더의 작은 프로필 크기
   height: 32px;
-  margin-right: 12px;
-  overflow: hidden;
-  border-radius: 50%;
-
+  border-radius: 50%; // 사진을 원으로 자름
+  overflow: hidden; // 원 밖으로 나온 부분을 숨김
+  
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; // 원 안을 사진으로 채움
   }
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column; 
 }
 
 .username {
+  color: #262626;
   font-weight: 600;
+  font-size: 14px;
+  text-decoration: none; 
+
 }
 
-.optionsButton,
-.actionButton,
-.viewCommentsButton {
-  border: 0;
-  background: transparent;
+.optionsButton {
+  border: none;
+  background: none;
+  padding: 8px;
   cursor: pointer;
+  color: #262626;  
 }
 
-.imageContainer img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
+.imageContainer {
+  position: relative;  
+  aspect-ratio: 1 / 1; // 게시 사진을 정사각형으로 유지
+  background-color: #000;
 }
 
-.actions,
-.content,
-.postComments {
-  padding: 0 16px 12px;
-}
-
-.actionButtons,
-.leftButtons {
-  display: flex;
-  align-items: center;
+.actions {
+  padding: 6px 16px;  
 }
 
 .actionButtons {
-  justify-content: space-between;
+  display: flex; // 좋아요·댓글·공유와 저장을 한 줄에 둠
+  justify-content: space-between; // 저장 버튼을 오른쪽 끝으로 밈
+  margin-bottom: 8px;  
+}
+
+.leftButton {
+   display: flex;
+   gap: 16px; 
 }
 
 .actionButton {
+  border: none;
+  background: none;
   padding: 8px;
-  font-size: 22px;
+  cursor: pointer;
+  color: #262626;
+
+  svg {
+    font-size: 24px;
+  }
 }
 
-.likes {
+.like {
   font-weight: 600;
+  font-size: 14px;
+  color: #262626;
+  margin: 4px 0;  
+}
+
+.content {
+  padding: 0 16px;  
 }
 
 .text {
-  display: flex;
-  gap: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 4px;  
 }
 
 .caption {
-  white-space: pre-wrap;
-}
+  color: #262626;
+  margin-left: 4px;
+  
+  :global(.hashtag-link) {
+    color: #0095f6;
+    text-decoration: none;
 
-.time,
-.viewCommentsButton {
-  color: #8e8e8e;
-  font-size: 12px;
-}
-
-.commentForm {
-  display: flex;
-  gap: 12px;
-  padding-top: 8px;
-}
-
-.commentInput {
-  flex: 1;
-  border: 0;
-  outline: none;
-}
-
-.commentSubmit {
-  border: 0;
-  background: transparent;
-  color: #0095f6;
-  font-weight: 600;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: default;
+    &:hover {
+      color: rgb(0, 176, 246);  
+    }
   }
 }
+
+.moreButton {
+  border: none;
+  background: none;
+  color: #8e8e8e;
+  font-size: 14px;
+  padding: 0;
+  margin-left: 4px;  
+  cursor: pointer;
+
+  &:hover {
+    color: #262626;
+  }
+}
+.liked {
+  color: #F00;
+}
+.time {   
+  color: #8e8e8e;
+  font-size: 12px;
+  margin: 8px 0;  
+}
+
+/* ✅ "댓글 N개 보기" 버튼 */
+.postComents {
+   padding: 0 16px;  
+}
+
+.commentSection {
+  margin-top: 8px;  
+}
+
+.viewCommentsButton {
+  background: none;
+  border: none;
+  color: #8e8e8e;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  display: inline-block;
+  
+  &:hover {
+    color: #262626;
+  }
+}
+
+/* ✅ 댓글 입력 폼 */
+.commentFrom {
+  display: flex;
+  align-items: center;
+  padding: 8px 0px;
+  background: #fff;
+  
+  .commentInput {
+    flex: 1;
+    border: none;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    background: transparent;
+  }
+
+  .commentSubmit {
+    border: none;
+    background: none;
+    color: #0095f6;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 8px;
+
+    &:disabled {
+      color: #b2dffc;
+      cursor: not-allowed;  
+    }
+  }
+}
+
+

@@ -4,7 +4,7 @@ import styles from './FeedItem.module.scss';
 const FeedItemComments = ({ commentCount }) => {
   return (
     <div className={styles.commentSection}>
-      {/* 댓글 개수 */}
+      {/* toLocaleString()이 댓글 수를 천 단위로 보여줌 */}
       <button
         type='button'
         className={styles.viewCommentsButton}>

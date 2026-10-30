@@ -1,0 +1,220 @@
+// src/components/common/Sidebar.module.scss
+
+.sidebar {
+  position: fixed; // 스크롤해도 화면 왼쪽에 고정
+  left: 0;
+  top: 0;
+  width: 244px; // 펼친 메뉴 너비
+  height: 100vh; // 화면 높이만큼 채움
+  padding: 8px 12px 20px;
+  border-right: 1px solid #dbdbdb;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column; // 로고 아래 메뉴를 세로로 쌓음
+  z-index: 100; // 본문보다 위에 둠
+  transition: width 0.3s ease; // 너비가 바뀔 때 0.3초 동안 전환
+}
+
+.collapsed {
+  width: 72px; // 접으면 아이콘만 남을 너비
+  padding: 8px 12px;
+
+  .logo svg {
+    display: none; // 글자 로고를 숨김
+  }
+
+  .menuText {
+    display: none; // 메뉴 글자를 숨김
+  }
+
+  .logoContainer {
+    height: 72px;
+    padding: 16px 0;
+    margin-bottom: 16px;
+    justify-content: center;
+  }
+}
+
+.searchBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 98;
+}
+
+.logoContainer {
+  height: 92px;
+  padding: 25px 12px 16px;
+  margin-bottom: 19px;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: block;
+
+  svg {
+    display: block;
+    color: #000;
+  }
+}
+
+.menuContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column; // 홈, 프로필을 세로로 쌓음
+  gap: 6px;
+}
+
+.menuItem {
+  display: flex; // 아이콘과 글자를 가로로 둠
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #000;
+  transition: background-color 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f2f2f2;
+  }
+
+  &:global(.active) {
+    font-weight: bold; // 현재 페이지 메뉴를 굵게
+  }
+
+  svg {
+    font-size: 20px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.menuText {
+  font-size: 14px;
+}
+
+.iconWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.badgeDot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ed4956;
+  border: 2px solid #fff;
+  box-sizing: content-box;
+}
+
+.profileImage {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%; // 메뉴의 프로필을 원으로
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // 원 안을 사진으로 채움
+  }
+}
+
+.bottomMenu {
+  margin-top: auto; // 아래 메뉴를 사이드바 맨 밑으로 밈
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .menuItem {
+    margin-bottom: 0;
+  }
+}
+
+.bottomMenu {
+  width: 100%;
+  border: none;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+}
+
+.moreMenu {
+  position: absolute; // 더보기 버튼 위에 겹쳐 띄움
+  bottom: 100%;
+  left: -12px;
+  width: 280px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+
+  &.active {
+    display: block;
+  }
+
+  .menuItem {
+    width: 100%;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: none;
+    background: none;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+
+    &:hover {
+      background-color: #f3f3f3;
+    }
+
+    &:active {
+      background-color: #f0f0f0;
+    }
+  }
+}
+
+.menuDivider {
+  border: none;
+  height: 1px;
+  background-color: #dbdbdb;
+  margin: 8px 0;
+}
+
+@media (max-width: 1263px) {
+  .sidebar {
+    width: 72px; // 화면이 좁으면 아이콘만 남김
+    padding: 8px 12px;
+  }
+
+  .logo svg {
+    display: none; // 글자 로고를 숨김
+  }
+
+  .menuText {
+    display: none; // 글자를 숨겨 아이콘만 보이게
+  }
+
+  .logoContainer {
+    height: 72px;
+    padding: 16px 0;
+    margin-bottom: 16px;
+    justify-content: center;
+  }
+}
