@@ -23,7 +23,7 @@ const FeedItemHeader = ({
             />
           </div>
         </Link>
-      <div className={styles.userDetailes}>
+      <div className={styles.userDetails}>
         {/* 이름도 같은 프로필 주소로 이동 */}
         <Link
           href={`/${username}`}

@@ -79,7 +79,7 @@
   margin-bottom: 8px;  
 }
 
-.leftButton {
+.leftButtons {
    display: flex;
    gap: 16px; 
 }
@@ -96,7 +96,7 @@
   }
 }
 
-.like {
+.likes {
   font-weight: 600;
   font-size: 14px;
   color: #262626;
@@ -150,7 +150,7 @@
 }
 
 /* ✅ "댓글 N개 보기" 버튼 */
-.postComents {
+.postComments {
    padding: 0 16px;  
 }
 
@@ -173,7 +173,7 @@
 }
 
 /* ✅ 댓글 입력 폼 */
-.commentFrom {
+.commentForm {
   display: flex;
   align-items: center;
   padding: 8px 0px;

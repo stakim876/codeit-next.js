@@ -1,11 +1,8 @@
 // ~/instagram-next/data/posts.js
-// 지금으로부터 minutes분 전 시각을 ISO 문자열로 만듦.
-// Date.now()에서 분 × 60초 × 1000ms를 빼고, toISOString()으로 글자 시각을 뽑음.
-// 나중에 formatDate가 이 글자를 「10월 30일」처럼 바꿈.
+// 지금부터 몇 분 전인 시각을 만들어요 - 파트2 서버가 보내던 모양의 글자로
 const minutesBefore = (minutes) =>
   new Date(Date.now() - minutes * 60 * 1000).toISOString();
 
-// 홈 피드가 그릴 게시글 목록. page.js가 가져와 map으로 FeedItem에 넘김.
 export const posts = [
   {
     id:1,

@@ -145,8 +145,8 @@
   }
 }
 
-.bottomMenu {
-  width: 100%;
+button.menuItem {
+  width: 100%; // 버튼으로 만든 메뉴도 칸 너비를 채움
   border: none;
   background: none;
   font-family: inherit;

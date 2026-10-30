@@ -42,8 +42,8 @@
   animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
 }
 
-.skeletonUsername {
-  width: 120px;
+.skeletonImage {
+  width: 100%; // 로딩 중 사진 자리. 게시글처럼 정사각형
   aspect-ratio: 1 / 1;
   background: #efefef;
   animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
