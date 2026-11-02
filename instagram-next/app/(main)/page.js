@@ -1,10 +1,10 @@
-// ~/instagrem-next/app/page.js
+// ~/instagram-next/app/(main)/page.js
+// / 경로. (main) layout의 children 자리에 피드가 그려진다.
 import page from '@/components/FeedPage.module.scss';
 import styles from '@/components/FeedList.module.scss';
 import FeedItem from '@/components/FeedItem.jsx';
 import { posts } from '@/data/posts.js'; // 그릴 게시글 목록
 
-// / 경로 페이지. layout의 children 자리에 렌더됨
 export default function Home() {
   return (
     <main className={page.mainContent}>

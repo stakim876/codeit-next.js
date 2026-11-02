@@ -1,0 +1,37 @@
+// src/pages/auth/LoginPage.module.scss
+
+@use "./AuthForm.module.scss"; // 로그인 폼 스타일을 이 파일에서 같이 씀
+
+
+// Login Page Specific Styles
+.facebookLogin {
+  display: flex; // 아이콘과 글자를 한 줄에 둠
+  align-items: center;
+  justify-content: center; // 줄을 가운데에 둠
+  gap: 8px; // 아이콘과 글자 사이 간격
+  color: #385185;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  margin: 8px 0;  
+}
+
+.forgotPassword {
+   display: block; // 비밀번호 찾기 링크를 다음 줄에 둠
+   color: #00376b;
+   font-size: 12px;
+   text-decoration: none;
+   margin-top: 12px; 
+}
+
+.signupCard {
+  p {
+    font-size: 14px;
+  }  
+
+  a { 
+    color: #0095f6;
+    text-decoration: none;
+    font-weight: 600; // 가입 링크만 굵게
+  }
+}

@@ -10,7 +10,7 @@
 .carouselTrack {
   display: flex; // 슬라이드를 가로로 나열
   height: 100%;
-  transition: transfrom 0.3s ease-in-out; // 트랙이 움직일 때 0.3초 동안 전환
+  transition: transform 0.3s ease-in-out; // transform이 트랙을 옮긴다. 0.3초 동안 넘어간다.
 }
 
 .carouselSlide {
@@ -42,7 +42,7 @@
   justify-content: center;
   
   &.prev { left: 16px; } // 이전 버튼
-  &.nex  { right: 16px; } // 다음 버튼
+  &.next { right: 16px; } // .next가 다음 버튼을 오른쪽에 둔다.
 
   i {
     font-size: 16px;

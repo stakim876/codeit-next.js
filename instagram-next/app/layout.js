@@ -1,5 +1,4 @@
 // ~/instagram-next/app/layout.js
-import Sidebar from '@/components/Sidebar.jsx';
 import '@/styles/global.scss';
 
 export const metadata = {
@@ -13,9 +12,7 @@ export default function RootLayout({ children }) {
     // html과 body로 페이지를 감쌈
     <html lang='ko'>
       <body>
-        {/* 왼쪽 메뉴. 어느 페이지에서나 이 자리에 그려짐 */}
-        <Sidebar />
-        {/* children 자리에 /, /seungtae 같은 각 페이지가 들어감 */}
+        {/* children 자리에 (main), (auth) 레이아웃이 들어감 */}
         {children}
       </body>
     </html>     

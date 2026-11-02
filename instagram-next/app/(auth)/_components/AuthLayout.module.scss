@@ -1,0 +1,23 @@
+// components/layouts/AuthLayout.module.scss
+
+.authLayout {
+  display: flex; // 예시 이미지와 폼을 가로로 둠
+  justify-content: center; // 묶음을 화면 가로 가운데에 둠
+  align-items: center; // 묶음을 화면 세로 가운데에 둠
+  min-height: 100vh; // 최소 높이를 화면 전체로
+  background-color: #fff;
+  padding: 20px;  
+}
+
+.authImage {
+  width: 24%; // 왼쪽 예시 이미지가 가로의 일부만 차지
+  
+  img {
+    width: 100%; // 그 칸을 사진으로 채움
+  }
+}
+
+.authFormContainer {
+  max-width: 350px; // 폼 칸이 이 너비보다 넓어지지 않음
+  width: 100%; // 좁은 화면에서는 부모 너비에 맞춤
+}
