@@ -3,9 +3,9 @@
 // params를 기다리므로 즉시 이동 검사에서는 이 페이지를 뺀다.
 export const instant = false;
 
-export default async function cityPage({ params }) {
+export default async function CityPage({ params }) {
   // params는 Promise. [city] 칸의 글자를 꺼낸다.
   const { city } = await params;
   
-  return <h2 className='p-6 text-xl font-semibold'>{city} 날씨에요</h2>;
+  return <h2 className='p-6 text-xl font-semibold'>{city} 날씨예요</h2>;
 }

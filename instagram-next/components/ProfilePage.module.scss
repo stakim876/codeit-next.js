@@ -72,7 +72,7 @@
     color: #262626;
 
     &:hover {
-      background-color: #262626;
+      background-color: #dbdbdb; // 밝은 화면에서 마우스를 올리면 회색
     }
 
     @media (prefers-color-scheme: dark) {
@@ -80,7 +80,7 @@
       color: #fafafa;
 
       &:hover {
-        background-color: #dbdbdb;
+        background-color: #262626; // 어두운 화면에서는 더 어두운 회색
       }
     }  
   }

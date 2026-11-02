@@ -39,13 +39,14 @@
      position: absolute; // 입력창 위에 겹쳐 둠
      right: 8px; // 칸 오른쪽 끝에 붙임
      top: 50%;
-     transform: translate(-50%); // 아이콘 너비의 절반만큼 왼쪽으로 당김
+     transform: translateY(-50%); // 칸 높이를 기준으로 세로 가운데에 둠
      width: 20px;
      height: 20px;
    }
 
    .successIcon {
-     background: ur('data:image/svg+xml;utf8,<svg xmlns=lns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2328a745"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat center;
+     // url() 안의 svg가 초록 체크. xmlns가 맞아야 그림이 나온다.
+     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2328a745"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>') no-repeat center;
    }
 
    .errorIcon {
@@ -66,8 +67,9 @@
 .authButton {
   width: 100%; // 제출 버튼이 폼 너비를 채움
   padding: 7px 16px;
-  background-color: #0065f6;  
+  background-color: #0095f6; // 로그인 버튼의 파란색
   color: white;
+  border: none; // 브라우저 기본 테두리를 없앰
   border-radius: 8px;
   font-weight: 600;
   font-size: 14px;

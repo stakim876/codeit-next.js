@@ -72,7 +72,7 @@
 
 .skeletonTextLine {
   width: 80%;
-  height: 154px;
+  height: 14px; // 본문 한 줄 높이. 로딩 자리도 글줄과 같게 둔다.
   border-radius: 4px;
   background: #efefef;
   animation: shimmer 1.5s infinite linear; // 로딩 중 밝기가 반복해서 바뀜
@@ -89,7 +89,7 @@
 @keyframes shimmer {
   0% { opacity: 1; } // 시작은 밝음
   50% { opacity: 0.5; } // 중간에서 어두워짐
-  10% { opacity: 1; } // 10% 지점도 밝음
+  100% { opacity: 1; } // 끝에서 다시 밝아짐
 }
 
 @media (max-width: 640px) {
