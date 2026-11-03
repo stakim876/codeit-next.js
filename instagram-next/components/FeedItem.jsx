@@ -7,6 +7,7 @@ import FeedItemContent from './FeedItemContent.jsx';
 import FeedItemComments from './FeedItemComments.jsx';
 import CommentForm from './CommentForm.jsx';
 import CommentArea from './CommentArea.jsx';
+import Image from 'next/image';
 
 // page.js가 넘긴 props를 받아 헤더, 사진, 좋아요, 본문, 댓글에 필요한 값만 다시 넘김
 const FeedItem = ({
@@ -19,6 +20,7 @@ const FeedItem = ({
   createdAt,
   likeCount,
   commentCount,  
+  isFirst
 }) => {
   return (
     <article className={styles.post}>
@@ -35,6 +37,9 @@ const FeedItem = ({
         <img
           src={postImage}
           alt={postAlt}
+          width={600}
+          height={600}
+          loading={isFirst ? "eager" : "lazy"}
        />
      </div>
     </div>

@@ -3,6 +3,7 @@
 import layoutStyles from '../_components/AuthLayout.module.scss';
 import styles from '../_components/LoginPage.module.scss';
 import AuthCard from '../_components/AuthCard.jsx';
+import Image from 'next/image';
 
 export default function LoginPage() {
   return (
@@ -13,6 +14,11 @@ export default function LoginPage() {
        <img
          src='/phones.png'
          alt='Instagram 앱 스크린샷' 
+         width={842}
+         height={1234}
+         // style={{ height: 'auto' }}
+         sizes='24vw'
+         loading="eager"
       />
     </div>
 

@@ -4,6 +4,7 @@ import { FaHouse } from 'react-icons/fa6';
 import InstagramLogo from './InstagramLogo.jsx';
 import NavLink from './NavLink.jsx';
 import styles from './Sidebar.module.scss';
+import Image from 'next/image.js';
 
 // 왼쪽 고정 메뉴. 홈과 프로필로 이동
 function Sidebar() {
@@ -34,6 +35,8 @@ function Sidebar() {
             <img
               src='/profiles/seungtae-small.jpg'
               alt='프로필'
+              width={40}
+              height={40}
             />
           </div>
           <span className={styles.menuText}>프로필</span>

@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import styles from './FeedItem.module.scss';
 import { FaEllipsis } from 'react-icons/fa6';
+import Image from 'next/image';
 
 // 작성자 프로필, 이름, 더보기 버튼을 그림.
 // profileImage가 없으면 두 번째 인자 기본 사진을 씀.
@@ -20,6 +21,8 @@ const FeedItemHeader = ({
             <img
               src={profileImage}
               alt={`${username}의 프로필`}
+              width={40}
+              height={40}
             />
           </div>
         </Link>
