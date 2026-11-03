@@ -1,31 +1,25 @@
 // ~/instagram-next/app/(main)/page.js
 // / 경로. (main) layout의 children 자리에 피드가 그려진다.
+import { Suspense } from 'react';
 import page from '@/components/FeedPage.module.scss';
 import styles from '@/components/FeedList.module.scss';
-import FeedItem from '@/components/FeedItem.jsx';
-import { posts } from '@/data/posts.js'; // 그릴 게시글 목록
+import FeedList from '@/components/FeedList.jsx';
+import FeedSkeleton from '@/components/FeedSkeleton.jsx';
 
 export default function Home() {
   return (
     <main className={page.mainContent}>
-      <div className={styles.feedList}>
-        {/* posts를 한 바퀴 돌며 글마다 FeedItem 하나를 그림.
-            key는 React가 글을 구분하는 id, 나머지 속성은 post 필드를 넘김 */}
-        {posts.map((post) => (
-          <FeedItem
-            key={post.id}
-            postId={post.id}
-            username={post.username}
-            profileImage={post.profileImage}
-            postImage={post.postImage}
-            postAlt={post.postAlt}
-            content={post.content}
-            createdAt={post.createdAt}
-            likeCount={post.likeCount}
-            commentCount={post.commentCount}
-          />  
-        ))}
-      </div>
-    </main>    
-    );
-  }
+      {/* FeedList는 요청을 기다린 뒤에 그린다.
+          그 전에는 게시글 모양의 빈 칸 두 개를 보여 준다. */}
+      <Suspense
+        fallback={
+          <div className={styles.loader}>
+            <FeedSkeleton />
+            <FeedSkeleton />
+          </div>
+        }>
+        <FeedList />
+      </Suspense>
+    </main>
+  );
+}
