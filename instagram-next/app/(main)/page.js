@@ -6,6 +6,9 @@ import styles from '@/components/FeedList.module.scss';
 import FeedList from '@/components/FeedList.jsx';
 import FeedSkeleton from '@/components/FeedSkeleton.jsx';
 
+// 이 줄을 켜면 피드 대신 error.js가 나온다. 지금은 목록이 그려지게 꺼 둔다.
+// throw new Error('게시물 목록을 받아 오지 못했어요');
+
 export default function Home() {
   return (
     <main className={page.mainContent}>

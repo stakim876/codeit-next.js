@@ -2,6 +2,7 @@
 // /[username]/saved. 그 사용자가 저장한 글. 아직 글이 없으면 안내만 그린다.
 import styles from '@/components/StatusMessage.module.scss';
 import { profiles } from '@/data/profiles.js';
+import { notFound } from 'next/navigation';
 
 // params를 기다려야 해서 즉시 이동 검사에서 이 페이지를 뺀다.
 export const instant = false;
@@ -11,9 +12,9 @@ export default async function SavedPage({ params }) {
   const { username } = await params;
   const profile = profiles.find((item) => item.username === username);
 
-  // 없는 아이디면 저장 목록 대신 안내만 그린다.
+  // 없는 아이디면 저장 목록 대신 (main)/not-found.js를 그린다.
   if (profile === undefined) {
-    return <p className={styles.errorText}>{username} 님의 프로필이 없어요.</p>;
+    notFound();
   }
 
   return (
