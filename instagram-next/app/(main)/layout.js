@@ -4,9 +4,8 @@ import Sidebar from '@/components/Sidebar.jsx';
 
 // 피드·프로필 공통 레이아웃. 왼쪽 메뉴는 여기만 그린다. 로그인 화면에는 없다.
 export default function MainLayout({ children }) {
-  // 이 에러가 나면 아래 return은 실행되지 않는다.
-  // 같은 구간인 (main)/error.js가 피드 대신 안내 화면을 그린다.
-  throw new Error('사이드바를 그리지 못했어요');
+  // 이 줄을 켜면 아래 메뉴 대신 (main)/error.js가 나온다. 지금은 메뉴가 그려지게 꺼 둔다.
+  // throw new Error('사이드바를 그리지 못했어요');
 
   return (
     // 메뉴와 페이지는 형제라 fragment로 묶는다.

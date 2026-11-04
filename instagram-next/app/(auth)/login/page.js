@@ -5,15 +5,20 @@ import styles from '../_components/LoginPage.module.scss';
 import AuthCard from '../_components/AuthCard.jsx';
 import Image from 'next/image';
 
+// 탭 제목. 루트 template의 %s에 들어가 「로그인 • Instagram」이 된다.
+export const metadata = {
+  title: '로그인',
+};
+
 export default function LoginPage() {
   return (
     // 부모 레이아웃 안에 형제 둘(왼쪽 이미지, 오른쪽 폼)만 두므로 fragment로 묶는다.
     <>
      {/* 왼쪽: 인스타그램 앱이 보이는 휴대폰 이미지 */}
      <div className={layoutStyles.authImage}>
-       <img
+       <Image
          src='/phones.png'
-         alt='Instagram 앱 스크린샷' 
+         alt='Instagram 앱 스크린샷'
          width={842}
          height={1234}
          // style={{ height: 'auto' }}

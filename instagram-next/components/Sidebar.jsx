@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { FaHouse } from 'react-icons/fa6';
 import InstagramLogo from './InstagramLogo.jsx';
 import NavLink from './NavLink.jsx';
+import CreateButton from './CreateButton.jsx';
 import styles from './Sidebar.module.scss';
-import Image from 'next/image.js';
 
 // 왼쪽 고정 메뉴. 홈과 프로필로 이동
 function Sidebar() {
@@ -26,6 +26,9 @@ function Sidebar() {
           <FaHouse size={24} />
           <span className={styles.menuText}>홈</span>
         </NavLink>
+
+        {/* 누르면 새 게시물 창을 연다 */}
+        <CreateButton />
 
         {/* 프로필은 /seungtae 페이지로 이동 */}
         <NavLink

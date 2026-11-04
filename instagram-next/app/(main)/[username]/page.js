@@ -1,29 +1,45 @@
 // ~/instagram-next/app/(main)/[username]/page.js
-// /[username] 경로. 예: /seungtae. 주소의 아이디로 프로필을 찾아 그린다.
+// /[username] 경로. 예: /seungtae. 주소의 아이디로 프로필과 탭 제목을 만든다.
+import { notFound } from 'next/navigation';
 import styles from '@/components/ProfilePage.module.scss';
 import ProfileImage from '@/components/ProfileImage.jsx';
 import { profiles } from '@/data/profiles.js';
-import { notFound } from 'next/navigation';
 
-// params를 기다려야 해서 화면이 바로 바뀌지 않아도 된다. 즉시 이동 검사에서 이 페이지를 뺀다.
+// params를 기다리므로 즉시 이동 검사에서는 이 페이지를 뺀다.
 export const instant = false;
+
+// 아이디로 프로필 하나를 찾는다. 화면과 탭 제목이 같은 함수를 쓴다.
+function findProfile(username) {
+  return profiles.find((item) => item.username === username);
+}
 
 // 빌드 때 만들 프로필 주소. profiles의 username이 [username] 칸이 된다.
 export function generateStaticParams() {
   return profiles.map((profile) => ({ username: profile.username }));
 }
 
-export default async function ProfilePage({ params }) {
+// 브라우저 탭 제목과 설명. 페이지 본문과 따로 실행된다.
+export async function generateMetadata({ params }) {
   // params는 Promise. 주소의 [username] 칸을 꺼낸다.
   const { username } = await params;
+  const profile = findProfile(username);
 
-  // 기다리는 동안 같은 폴더의 loading.js가 먼저 보인다.
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // 없는 아이디면 제목을 만들지 않는다. 본문은 notFound()로 넘어간다.
+  if (profile === undefined) {
+    return {};
+  }
 
-  // 프로필 목록에서 그 아이디와 같은 항목을 찾는다.
-  const profile = profiles.find((item) => item.username === username);
+  return {
+    title: `${profile.name}(@${profile.username})`,
+    description: `게시물 ${profile.postCount}개, 팔로워 ${profile.followerCount}명, 팔로우 ${profile.followingCount}명`,
+  };
+}
 
-  // 없으면 (main)/not-found.js로 넘긴다.
+export default async function ProfilePage({ params }) {
+  const { username } = await params;
+  const profile = findProfile(username);
+
+  // 없으면 (main)/not-found.js를 그린다.
   if (profile === undefined) {
     notFound();
   }
@@ -38,7 +54,6 @@ export default async function ProfilePage({ params }) {
 
         <div className={styles.profileInfo}>
           <div className={styles.profileActions}>
-            {/* 사용자 아이디 */}
             <h2 className={styles.username}>{profile.username}</h2>
           </div>
 
@@ -62,7 +77,6 @@ export default async function ProfilePage({ params }) {
           </ul>
 
           <div className={styles.profileBio}>
-            {/* 표시 이름 */}
             <span className={styles.fullName}>{profile.name}</span>
           </div>
         </div>
