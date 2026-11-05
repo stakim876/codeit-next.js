@@ -3,7 +3,7 @@ export const profiles = [
   {
     username: 'seungtae',
     name: '김승태',
-    profileImage: 'https://picsum.photos/seed/seungtae/150/150',
+    profileImage: '/profiles/seungtae.jpg',
     postCount: 3,
     followerCount: 1240,
     followingCount: 312,
@@ -11,7 +11,7 @@ export const profiles = [
   {
     username: 'minji',
     name: '이민지',
-    profileImage: 'https://picsum.photos/seed/minji/150/150',
+    profileImage: '/profiles/minji.jpg',
     postCount: 3,
     followerCount: 8520,
     followingCount: 401,
@@ -19,7 +19,7 @@ export const profiles = [
   {
     username: 'seungwoo',
     name: '박승우',
-    profileImage: 'https://picsum.photos/seed/seungwoo/150/150',
+    profileImage: '/profiles/seungwoo.jpg',
     postCount: 3,
     followerCount: 974,
     followingCount: 233,

@@ -1,74 +1,65 @@
 // ~/instagram-next/components/FeedItemActions.jsx
-'use client';
+// 게시글 아래의 하트, 댓글, 공유, 저장. 하트를 누르면 서버에서 좋아요를 바꾼다.
+// 클릭으로 화면이 바뀌므로 클라이언트 컴포넌트여야 한다.
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useTransition } from "react";
 import {
   FaHeart,
   FaRegBookmark,
   FaRegComment,
   FaRegHeart,
   FaRegPaperPlane,
-} from 'react-icons/fa6';
-import styles from './FeedItem.module.scss';
+} from "react-icons/fa6";
+import styles from "./FeedItem.module.scss";
+import { likePost, unlikePost } from "@/app/actions.js";
 
-// 클릭으로 좋아요 수를 바꾸므로 이 파일은 브라우저에서 실행된다.
-const FeedItemActions = ({ postId, likeCount }) => {
-  // liked는 내가 눌렀는지, count는 화면에 보일 개수. 처음 개수는 부모가 넘긴 값.
-  const [like, setLike] = useState({ liked: false, count: likeCount });
+const FeedItemActions = ({ postId, likeCount, liked }) => {
+  // isPending은 서버 함수가 끝나는 동안 true. 그때 하트 버튼을 잠근다.
+  const [isPending, startTransition] = useTransition();
 
-  // 서버에는 localStorage가 없다. 브라우저에 뜬 뒤에 이 글의 저장값을 읽는다.
-  useEffect(() => {
-    const saved = localStorage.getItem(`like-${postId}`);
-    if (saved) {
-      setLike(JSON.parse(saved));
-    }
-  }, [postId]);
-
-  // 누르면 liked를 뒤집고 개수를 바꾼 뒤, 글 id로 localStorage에 남긴다.
+  // 이미 좋아요면 해제하고, 아니면 추가한다. 서버 함수는 startTransition 안에서 부른다.
   const handleLike = () => {
-    const next = {
-      ...like,
-      liked: !like.liked,
-      count: like.liked ? like.count - 1 : like.count + 1,
-    };
-    localStorage.setItem(`like-${postId}`, JSON.stringify(next));
-    setLike(next);
+    startTransition(async () => {
+      if (liked) {
+        await unlikePost(postId);
+      } else {
+        await likePost(postId);
+      }
+    });
   };
 
   return (
     <div className={styles.actions}>
       <div className={styles.actionButtons}>
         <div className={styles.leftButtons}>
-          {/* 좋아요. liked면 채워진 하트 */}
+          {/* 좋아요. liked면 채워진 하트. 서버 작업 중에는 버튼을 막는다. */}
           <button
-            type='button'
+            type="button"
             className={styles.actionButton}
-            onClick={handleLike}>
-            {like.liked ? <FaHeart className={styles.liked} /> : <FaRegHeart />}
+            onClick={handleLike}
+            disabled={isPending}
+            aria-busy={isPending}
+          >
+            {liked ? <FaHeart className={styles.liked} /> : <FaRegHeart />}
           </button>
           {/* 댓글 */}
-          <button
-            type='button'
-            className={styles.actionButton}>
+          <button type="button" className={styles.actionButton}>
             <FaRegComment />
           </button>
           {/* 공유 */}
-          <button
-            type='button'
-            className={styles.actionButton}>
+          <button type="button" className={styles.actionButton}>
             <FaRegPaperPlane />
           </button>
         </div>
         {/* 저장 */}
-        <button
-          type='button'
-          className={styles.actionButton}>
+        <button type="button" className={styles.actionButton}>
           <FaRegBookmark />
         </button>
       </div>
       {/* toLocaleString()이 1300을 1,300처럼 천 단위로 끊음 */}
       <div className={styles.likes}>
-        좋아요 <span>{like.count.toLocaleString()}</span>개
+        좋아요 <span>{likeCount.toLocaleString()}</span>개
       </div>
     </div>
   );
