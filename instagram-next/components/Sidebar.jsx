@@ -11,30 +11,24 @@ function Sidebar() {
   return (
     <nav className={styles.sidebar}>
       <div className={styles.logoContainer}>
-        <Link
-          href='/'
-          className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           <InstagramLogo />
         </Link>
       </div>
 
       <div className={styles.menuContainer}>
-        <NavLink
-          href='/'
-          className={styles.menuItem}>
+        <NavLink href="/" className={styles.menuItem}>
           <FaHouse size={24} />
           <span className={styles.menuText}>홈</span>
         </NavLink>
 
         <CreateButton />
 
-        <NavLink
-          href='/seungtae'
-          className={styles.menuItem}>
+        <NavLink href="/seungtae" className={styles.menuItem}>
           <div className={styles.profileImage}>
             <Image
-              src='https://picsum.photos/seed/seungtae/40/40'
-              alt='프로필'
+              src="/profiles/seungtae-small.jpg"
+              alt="프로필"
               width={40}
               height={40}
             />

@@ -1,6 +1,6 @@
 // ~/instagram-next/app/(main)/[username]/page.js
 // /[username] 경로. 예: /seungtae. 주소의 아이디로 프로필과 탭 제목을 만든다.
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import styles from '@/components/ProfilePage.module.scss';
 import ProfileImage from '@/components/ProfileImage.jsx';
 import { profiles } from '@/data/profiles.js';
@@ -37,6 +37,12 @@ export async function generateMetadata({ params }) {
 
 export default async function ProfilePage({ params }) {
   const { username } = await params;
+
+  // /Seungtae처럼 대문자가 있으면 소문자 주소로 보낸다.
+  if (username !== username.toLowerCase()) {
+    redirect(`/${username.toLowerCase()}`);
+  }
+
   const profile = findProfile(username);
 
   // 없으면 (main)/not-found.js를 그린다.
