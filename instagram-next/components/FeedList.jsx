@@ -3,13 +3,13 @@
 import { connection } from "next/server";
 import styles from "./FeedList.module.scss";
 import FeedItem from "./FeedItem.jsx";
-import { posts } from "@/data/posts.js";
+import { getPosts } from "@/data/posts.js";
 
 const FeedList = async () => {
   // 글 시각이 지금 기준이라, 빌드할 때 굳히지 않고 요청 뒤에 그린다.
   await connection();
-  // 2초 동안 홈의 불러오는 중 화면이 보이게 한다.
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // getPosts가 캐시와 2초 대기를 담당한다.
+  const posts = await getPosts();
 
   // 이 줄을 켜면 글 목록 대신 error.js가 나온다. 지금은 목록이 그려지게 꺼 둔다.
   // throw new Error('게시물 목록을 받아 오지 못했어요');

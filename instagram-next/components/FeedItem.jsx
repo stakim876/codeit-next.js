@@ -20,7 +20,7 @@ const FeedItem = ({
   likeCount,
   liked,
   commentCount,
-  isFirst
+  isFirst,
 }) => {
   return (
     <article className={styles.post}>

@@ -1,4 +1,5 @@
 // ~/next-lab/app/p3-09/practice1/page.js
+// /p3-09/practice1. 이번 주 책 순위를 표로 그린다.
 const ranking = [
   { rank: 1, title: '어린 왕자' },
   { rank: 2, title: '모모' },
@@ -18,6 +19,7 @@ export default function RankingPage() {
             <th className='pr-6 text-left'>순위</th>
             <th className='text-left'>제목</th>
           </tr>
+          {/* rank로 줄을 구분하고, 순위와 제목을 칸에 넣는다. */}
           {ranking.map((book) => (
             <tr key={book.rank}>
               <td className='pr-6'>{book.rank}</td>

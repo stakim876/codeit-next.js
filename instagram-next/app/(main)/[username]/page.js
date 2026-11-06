@@ -1,30 +1,24 @@
 // ~/instagram-next/app/(main)/[username]/page.js
-// /[username] 경로. 예: /seungtae. 주소의 아이디로 프로필과 탭 제목을 만든다.
+// /seungtae 처럼 주소의 사용자 이름으로 프로필을 그린다.
 import { notFound, redirect } from 'next/navigation';
 import styles from '@/components/ProfilePage.module.scss';
 import ProfileImage from '@/components/ProfileImage.jsx';
-import { profiles } from '@/data/profiles.js';
+import { profiles, getProfile } from '@/data/profiles.js';
 
 // params를 기다리므로 즉시 이동 검사에서는 이 페이지를 뺀다.
 export const instant = false;
 
-// 아이디로 프로필 하나를 찾는다. 화면과 탭 제목이 같은 함수를 쓴다.
-function findProfile(username) {
-  return profiles.find((item) => item.username === username);
-}
-
-// 빌드 때 만들 프로필 주소. profiles의 username이 [username] 칸이 된다.
+// 빌드할 때 미리 만들 사용자 이름. profiles의 username이 [username]이 된다.
 export function generateStaticParams() {
   return profiles.map((profile) => ({ username: profile.username }));
 }
 
-// 브라우저 탭 제목과 설명. 페이지 본문과 따로 실행된다.
+// 탭 제목과 설명. 루트 layout의 template에서 %s 자리에 title이 들어간다.
 export async function generateMetadata({ params }) {
-  // params는 Promise. 주소의 [username] 칸을 꺼낸다.
   const { username } = await params;
-  const profile = findProfile(username);
+  const profile = await getProfile(username);
 
-  // 없는 아이디면 제목을 만들지 않는다. 본문은 notFound()로 넘어간다.
+  // 없는 사용자는 제목을 비워 둔다. 화면은 아래 notFound()가 바꾼다.
   if (profile === undefined) {
     return {};
   }
@@ -36,16 +30,17 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProfilePage({ params }) {
+  // params는 Promise. [username] 칸의 글자를 꺼낸다.
   const { username } = await params;
 
-  // /Seungtae처럼 대문자가 있으면 소문자 주소로 보낸다.
+  // 대문자가 섞이면 소문자 주소로 보낸다. /SeungTae → /seungtae
   if (username !== username.toLowerCase()) {
     redirect(`/${username.toLowerCase()}`);
   }
 
-  const profile = findProfile(username);
+  const profile = await getProfile(username);
 
-  // 없으면 (main)/not-found.js를 그린다.
+  // 목록에 없는 사용자면 not-found.js를 그린다.
   if (profile === undefined) {
     notFound();
   }
