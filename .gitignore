@@ -1,2 +1,4 @@
 node_modules/
 .next/
+.omc/
+DS_Store

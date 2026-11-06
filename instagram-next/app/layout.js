@@ -1,6 +1,7 @@
 // ~/instagram-next/app/layout.js
 // 모든 페이지를 감싸는 루트 레이아웃. 탭 제목의 기본값도 여기서 정한다.
 import '@/styles/global.scss';
+import QueryProvider from '@/components/QueryProvider.jsx';
 import { CreateFeedModalProvider } from '@/components/CreateFeedModalContext.jsx';
 
 // 탭 제목과 링크 미리보기. 페이지가 제목을 주면 template의 %s에 들어간다.
@@ -23,9 +24,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang='ko'>
       <body>
-        {/* 글 작성 창 상태를 모든 페이지에서 쓸 수 있게 감싼다.
-            children 자리에 (main), (auth) 레이아웃이 들어간다. */}
-        <CreateFeedModalProvider>{children}</CreateFeedModalProvider>
+        {/* QueryProvider가 브라우저에서 받아 둔 데이터를 페이지끼리 같이 쓴다.
+            그 안에서 글 작성 창 상태도 모든 페이지가 쓴다. */}
+        <QueryProvider>
+          <CreateFeedModalProvider>{children}</CreateFeedModalProvider>
+        </QueryProvider>
       </body>
     </html>
   );

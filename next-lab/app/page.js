@@ -7,8 +7,8 @@ export default function Home() {
     <main>
       {/* minutes는 분. 180이면 화면에 3시간 전으로 나온다. */}
       <ProfileRow
-        username='seungwoo'
-        profileImage='https://picsum.photos/seed/seungwoo/40/40'
+        username='seungtae'
+        profileImage='/profiles/seungtae-small.jpg'
         minutes={180}
       />
     </main>
