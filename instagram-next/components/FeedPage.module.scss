@@ -21,3 +21,10 @@
     padding: 30px 20px 0;
   }
 }
+
+@media (max-width: 768px) {
+  .feedLayout {
+    margin-left: 72px; // 모바일에서는 축소된 사이드바 너비만큼
+    padding: 0;
+  }
+}
