@@ -1,9 +1,8 @@
 // ~/instagram-next/components/FeedItemActions.jsx
-// 게시글 아래의 하트, 댓글, 공유, 저장. 하트는 게시물 API로 좋아요를 바꾼다.
-// 쿼리 데이터를 바로 고치므로 클라이언트 컴포넌트다.
+// 글 카드의 하트, 보내기, 저장과 좋아요 수.
+// 하트를 누르면 좋아요 요청을 보내므로 클라이언트 컴포넌트다.
 'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   FaHeart,
   FaRegBookmark,
@@ -12,98 +11,49 @@ import {
   FaRegPaperPlane,
 } from 'react-icons/fa6';
 import styles from './FeedItem.module.scss';
-import { MY_USER_ID } from '@/utils/me.js';
+import { useLikePost } from '@/hooks/useLikePost.js';
 
-// 받아 둔 페이지들을 돌며 게시물 하나만 바꾼 새 데이터를 만든다.
-// change는 그 게시물을 받아 바꿀 필드만 돌려주는 함수다.
-function changePost(data, postId, change) {
-  return {
-    ...data,
-    pages: data.pages.map((page) => ({
-      ...page,
-      items: page.items.map((post) => (post.id === postId ? { ...post, ...change(post) } : post)),
-    })),
-  };
-}
-
-// liked가 true면 좋아요, false면 취소를 게시물 서버에 보낸다.
-async function changeLike({ postId, liked }) {
-  const response = await fetch(`/api/posts/${postId}/likes/${MY_USER_ID}`, {
-    method: liked ? 'PUT' : 'DELETE',
-  });
-
-  if (!response.ok) {
-    throw new Error(`좋아요를 바꾸지 못했어요 (${response.status})`);
-  }
-
-  return response.json();
-}
 
 const FeedItemActions = ({ postId, likeCount, liked }) => {
-  const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: changeLike,
-    // 서버 응답 전에 화면의 하트와 개수를 먼저 바꾼다.
-    onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: ['posts'] });
-      const previousPosts = queryClient.getQueryData(['posts']);
-
-      queryClient.setQueryData(['posts'], (data) =>
-        changePost(data, variables.postId, (post) => ({
-          liked: variables.liked,
-          likeCount: post.likeCount + (variables.liked ? 1 : -1),
-        })),
-      );
-
-      return { previousPosts };
-    },
-    onSuccess: (result, variables) => {
-      // 서버가 돌려준 { liked, likeCount }로 그 게시물만 맞춘다.
-      queryClient.setQueryData(['posts'], (data) =>
-        changePost(data, variables.postId, () => result),
-      );
-    },
-    onError: async (error, variables, onMutateResult) => {
-      queryClient.setQueryData(['posts'], onMutateResult.previousPosts);
-      console.error(error);
-      // 실패했을 때만 서버의 지금 모습을 다시 받는다.
-      await queryClient.invalidateQueries({ queryKey: ['posts'] });
-    },
-  });
+  // mutate가 좋아요를 바꾸라고 보낸다. isPending이면 그 요청이 아직 끝나지 않았다.
+  const { mutate, isPending } = useLikePost();
 
   return (
     <div className={styles.actions}>
       <div className={styles.actionButtons}>
         <div className={styles.leftButtons}>
-          <button
+          {/* liked의 반대로 보낸다. 요청 중에는 버튼을 눌러도 다시 보내지 않는다. */}
+          <button 
             type='button'
             className={styles.actionButton}
             onClick={() => mutate({ postId, liked: !liked })}
             disabled={isPending}
             aria-busy={isPending}>
-            {liked ? <FaHeart className={styles.liked} /> : <FaRegHeart />}
+            {/* 이미 눌렀으면 채운 하트, 아니면 빈 하트 */}
+            {liked ? <FaHeart className={styles.liked} /> : <FaRegHeart />}  
           </button>
-          <button
+          <button 
             type='button'
             className={styles.actionButton}>
-            <FaRegComment />
-          </button>
-          <button
-            type='button'
-            className={styles.actionButton}>
-            <FaRegPaperPlane />
-          </button>
+            <FaRegComment />  
+            </button>
+            <button
+              type='button'
+              className={styles.actionButton}>
+              <FaRegPaperPlane />  
+            </button>
         </div>
         <button
           type='button'
           className={styles.actionButton}>
-          <FaRegBookmark />
-        </button>
+          <FaRegBookmark />  
+          </button>
       </div>
-      <div className={styles.likes}>
-        좋아요 <span>{likeCount.toLocaleString()}</span>개
-      </div>
+     {/* 천 단위로 끊어 좋아요 수를 보여 준다. */}
+     <div className={styles.likes}>
+      좋아요 <span>{likeCount.toLocaleString()}</span>개
+     </div>
     </div>
   );
 };
