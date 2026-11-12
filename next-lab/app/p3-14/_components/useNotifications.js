@@ -1,4 +1,10 @@
 // ~/next-lab/app/p3-14/_components/useNotifications.js
+// 메모. 배지와 목록이 같이 쓰는 알림 조회.
+// 1. queryKey가 둘 다 ['notifications']라서 요청은 한 번, 캐시는 하나다.
+// 2. 실패하면 retry: 1 때문에 한 번만 더 친다. 또 실패하면 멈춘다.
+// 3. throwOnError는 캐시에 data가 없을 때만 true → 그때만 error.js로 간다.
+//    예전에 받아 둔 목록이 있으면 에러를 컴포넌트로 넘기고 화면은 유지한다.
+// 4. select를 넘기면 캐시 원본은 그대로 두고, 그 컴포넌트의 data만 바꿔 준다.
 import { useQuery } from "@tanstack/react-query";
 
 async function getNotifications() {
@@ -16,11 +22,8 @@ export function useNotifications(select) {
     queryKey: ['notifications'],
     queryFn: getNotifications,
     staleTime: 30 * 1000,
-    // 실패하면 한 번만 다시 요청한다.
     retry: 1,
-    // 받아 둔 알림이 없을 때만 error.js로 넘긴다. 있으면 그 화면을 유지한다.
     throwOnError: (error, query) => query.state.data === undefined,
-    // 배지는 목록 대신 안 읽은 개수만 받는다.
     select,
   });
 }

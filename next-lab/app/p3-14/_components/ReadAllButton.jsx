@@ -1,4 +1,8 @@
 // ~/next-lab/app/p3-14/_components/ReadAllButton.jsx
+// 메모. 클릭하면 PATCH /notifications/read.
+// 서버가 500을 주면 throw → onError에서 console.error, error가 채워진다.
+// 쿼리 캐시는 그대로다. 버튼 옆 문구만 나온다.
+// 성공했을 때만 invalidateQueries로 목록과 배지를 다시 받는다.
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -22,7 +26,6 @@ export default function ReadAllButton() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
-    // 쿼리 실패와 달리, 이 버튼의 실패는 error로 옆에 보여 준다.
     onError: (error) => {
       console.error(error);
     },

@@ -1,4 +1,8 @@
 // ~/next-lab/app/p3-14/practice1/CityWeather.jsx
+// 메모. 도시 버튼을 누르면 city가 바뀌고 queryKey ['weather', city]도 바뀐다. 도시마다 캐시가 따로다.
+// 실패하면 error.status를 붙여 throw한다.
+// retryWeather가 false를 주면 그 즉시 에러 문구. true면 다시 요청.
+// 404는 false. 그 외는 실패 횟수가 2보다 작을 때만 true.
 "use client";
 
 import { useState } from "react";
@@ -15,7 +19,6 @@ async function getWeather(city) {
 
   if (!response.ok) {
     const error = new Error(`날씨를 불러오지 못했어요 (${response.status})`);
-    // retry 함수가 404인지 구분하려고 상태 코드를 에러에 붙인다.
     error.status = response.status;
     throw error;
   }
@@ -23,7 +26,6 @@ async function getWeather(city) {
   return response.json();
 }
 
-// 없는 도시는 다시 요청하지 않는다. 그 외 실패는 두 번까지만 다시 요청한다.
 function retryWeather(failureCount, error) {
   if (error.status === 404) {
     return false;

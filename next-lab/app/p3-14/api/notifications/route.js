@@ -1,4 +1,7 @@
 // ~/next-lab/app/p3-14/api/notifications/route.js
+// 메모. GET은 1초 후 알림 배열을 준다.
+// 500 return 주석을 살리면, 캐시가 없는 첫 방문은 error.js로 간다.
+// 캐시가 이미 있으면 throwOnError가 false라 목록은 남는다.
 import { notifications } from "../../_data/notifications.js";
 
 export async function GET() {

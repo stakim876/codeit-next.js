@@ -1,0 +1,17 @@
+### 민지의 프로필
+GET http://localhost:3002/p3-15/practice1/api
+
+### 민지 팔로우
+PUT http://localhost:3002/p3-15/practice1/api/follow
+
+### 민지 팔로우 취소
+DELETE http://localhost:3002/p3-15/practice1/api/follow
+
+### practice2 민지의 프로필
+GET http://localhost:3002/p3-15/practice2/api
+
+### practice2 민지 팔로우
+PUT http://localhost:3002/p3-15/practice2/api/follow
+
+### practice2 민지 팔로우 취소
+DELETE http://localhost:3002/p3-15/practice2/api/follow

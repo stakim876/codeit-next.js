@@ -1,5 +1,6 @@
 // ~/next-lab/app/p3-14/practice1/api/route.js
-// 대구는 없다. 화면에서 대구를 누르면 404가 나고 재시도하지 않는다.
+// 메모. 서울 18, 부산 21, 제주 23만 있다.
+// 대구는 표에 없으니 404. 화면의 retryWeather가 재시도를 끊는다.
 const temperatures = { seoul: 18, busan: 21, jeju: 23 };
 
 export async function GET(request) {

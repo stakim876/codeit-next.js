@@ -1,4 +1,9 @@
 // ~/next-lab/app/p3-14/_components/NotificationList.jsx
+// 메모. select 없이 호출해서 data는 알림 배열이다.
+// isPending이면 그릴 목록이 없으니 '불러오는 중'만 보여주고 return.
+// 그 다음엔 error가 있어도 return하지 않는다. 위는 실패 문구, 아래는 이전 data.
+// '다시 시도'는 refetch(). '읽음'은 mutation이고, 성공하면 invalidateQueries.
+// 같은 키를 다시 받으므로 배지 개수도 같이 바뀐다.
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -30,7 +35,6 @@ export default function NotificationList() {
     return <p className='mt-4'>불러오는 중…</p>;
   }
 
-  // 에러여도 이전에 받은 목록은 남긴다. 다시 시도는 refetch다.
   return (
     <>
       {error && (

@@ -1,0 +1,292 @@
+// ~/instagram-next/components/SearchPanel.module.scss
+// 접힌 사이드바 오른쪽에 붙는 검색 패널.
+// 기본은 화면 밖으로 밀려 있고, open이 붙으면 들어온다.
+
+.searchPenel {
+  position: fixed; // 스크롤해도 사이드바 옆에 고정
+  top: 0;
+  left: 72px; // 접힌 메뉴 너비만큼 오른쪽에서 시작
+  width: 397px;
+  height: 100vh; // 화면 높이만큼 채움
+  background-color: #fff;
+  border-right: 1px solid #dbdbdb;
+  border-radius: 0 16px 16px 0; // 오른쪽 모서리만 둥글게
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 99; // 본문보다 위, 사이드바(100)보다는 아래
+  display: flex;
+  flex-direction: column; // 제목, 입력, 결과를 세로로 쌓음
+  transform: translateX(-100%); // 자기 너비만큼 왼쪽으로 밀어 숨김
+  transition: transfrom 0.3s ease; // 열리고 닫힐 때 0.3초 동안 이동
+  
+  &.open {
+    transform: translateX(0); // 제자리로 돌아와 패널을 보여 줌
+  }
+}
+
+// 패널 상단의 검색 제목
+.header {
+   padding: 12px 24px 20px;
+   
+   h2 {
+    font-size: 24px;
+    font-weight: 700;
+    padding: 12px 0;
+   }
+}
+
+// 검색어 입력칸. 지우기 버튼이 이 안쪽에 겹친다
+.searchInputContainer {
+  position: relative;
+  padding: 0 16px 16px;  
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 36px 8px 16px; // 오른쪽에 지우기 버튼이 들어갈 여백
+  border: none;
+  border-radius: 8px;
+  background-color: #efefef;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  height: 40px;
+  box-sizing: border-box;
+  
+  &::placeholder {
+    color: #8e8e8e;
+  }
+}
+
+.clearButton {
+  position: absolute; // 입력칸 오른쪽에 겹쳐 둠
+  right: 24px;  
+  top: 50%;
+  transform: translateY(-70%);
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: #c7c7c7;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;  
+  font-size: 10px;
+  padding: 0;
+
+  &:hover {
+    background: #a8a8a8;
+  }
+}
+
+// 입력칸과 결과 목록을 나누는 선
+.divider {
+   border: none;
+   height: 1px;
+   background-color: #dbdbdb;
+   margin: 0; 
+}
+
+// 결과 목록. 패널 남은 높이를 채우고, 넘치면 이 칸만 스크롤된다
+.content {
+   flex: 1;
+   overflow-y: auto;
+   overscroll-behavior: contain; // 목록 끝에서 뒤 페이지가 같이 스크롤되지 않게 함
+   padding: 8px 0;
+   
+   &::-webkit-scrollbar {
+     width: 8px;
+   }
+
+   &::-webkit-scrollbar-thumb {
+     background-color: #c7c7c7;
+     border-radius: 4px;
+   }
+
+   &::-webkit-scrollbar-track {
+     background: transparent;
+   }
+}
+
+// 최근 검색 제목과 모두 지우기 버튼
+.recentHeader {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 4px 24px 8px;
+   
+   h3 {
+     font-size: 16px;
+     font-weight: 600;
+   }
+}
+
+.clearAllButton {
+  border: none;
+  background: none;
+  color: #0095f6;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px;
+  font-family: inherit;
+  
+  &:hover {
+    color: #00376b;
+  }
+}
+
+// 검색된 사람 한 줄. 사진과 이름을 가로로 둔다
+.resultItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 24px;
+  cursor: pointer;
+  transition: background-color 0.15;
+  
+  &:hover {
+    background-color: #f2f2f2;
+  }
+}
+
+.resultAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%; // 프로필 사진을 원으로
+  overflow: hidden;
+  flex-shrink: 0; // 이름이 길어도 사진 크기는 유지
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.resultInfo {
+  flex: 1;
+  min-width: 0; // 긴 이름이 말줄임될 수 있게 너비를 줄일 수 있음
+}
+
+.resultUsername {
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+  display: block;  
+  overflow: hidden;
+  text-overflow: ellipsis; // 길면 …으로 자름
+  white-space: nowrap;
+}
+
+.resultName {
+  font-size: 14px;
+  color: #8e8e8e;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;  
+}
+
+.removeButton {
+  border: none;
+  background: none;
+  color: #c7c7c7;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  
+  &:hover {
+    color: #262626;
+  }
+}
+
+// 결과 없음, 오류처럼 목록 대신 가운데 문구
+.emtyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #8e8e8e;
+  font-size: 14px;  
+}
+
+// 결과를 받는 동안 비어 있는 줄이 깜빡인다
+@keyframes shimmer {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }  
+}
+
+.skeletonIntem {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   padding: 8px 24px; 
+}
+
+.skeletonAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #efefef;
+  flex-shrink: 0;
+  animation: shimmer 1.5s infinite linear;  
+}
+
+.skeletonText {
+  height: 14px;
+  border-radius: 4px;
+  background: #efefef;
+  animation: shimmer 1.5s infinite linear;  
+}
+
+.skeletonUsername {
+  composes: skeletonText; // 막대 모양은 skeletonText를 같이 씀
+  width: 120px;
+  margin-bottom: 6px;
+}
+
+.skeletonName {
+  composes: skeletonText;
+  width: 160px;  
+}
+
+// 목록 맨 아래. 이 칸이 보이면 다음 결과를 더 받는다
+ .sentinel {
+   height: 1px; 
+ }
+
+ // 다음 결과를 받는 동안 가운데에 도는 원
+ .loadingMore {
+   display: flex;
+   justify-content: center;
+   padding: 12px 0; 
+ }
+
+ @keyframes spin {
+   to { transform: rotate(360deg); } 
+ }
+
+ .spinner {
+   width: 24px;
+   height: 24px;
+   border: 3px solid #dbdbdb;
+   border-top-color: #8e8e8e; // 위쪽만 진해서 회전처럼 보임
+   border-radius: 50%;
+   animation: spin 0.6s linear infinite; 
+ }
+
+ // 패널 뒤의 빈 화면. 누르면 검색을 닫을 때 쓴다
+  .backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 98; // 패널(99) 바로 아래
+  }

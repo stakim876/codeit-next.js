@@ -1,4 +1,8 @@
 // ~/next-lab/app/p3-14/_components/MemberSearch.jsx
+// 메모. 글자를 칠 때마다 keyword가 바뀌고 queryKey도 ['members', keyword]로 바뀐다.
+// enabled가 false(빈 칸)면 요청 자체를 안 한다. 안내 문구는 아래 if에서 직접 그린다.
+// 값이 있으면 API를 치고, 그 검색어 결과는 60초 동안 신선하다.
+// 같은 글자를 다시 치면 캐시를 바로 보여 준다.
 "use client";
 
 import { useState } from "react";
@@ -18,10 +22,8 @@ export default function MemberSearch() {
   const [keyword, setKeyword] = useState("");
 
   const { data, isPending, error } = useQuery({
-    // 검색어마다 캐시를 따로 둔다.
     queryKey: ["members", keyword],
     queryFn: () => searchMembers(keyword),
-    // 입력이 비어 있으면 요청하지 않는다.
     enabled: keyword !== "",
     staleTime: 60 * 1000,
   });

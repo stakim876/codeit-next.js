@@ -1,4 +1,7 @@
 // ~/next-lab/app/p3-14/error.js
+// 메모. throwOnError가 true일 때 알림 화면 대신 이 파일이 뜬다.
+// 다시 시도 순서: resetQuery()로 쿼리 에러 표시를 지우고, reset()으로 Next가 이 화면을 걷는다.
+// 쿼리 에러를 먼저 지워야, 다시 그릴 때 곧바로 이 화면으로 돌아오지 않는다.
 "use client";
 
 import { useEffect } from "react";
@@ -12,7 +15,6 @@ export default function ErrorPage({ error, reset }) {
   }, [error]);
 
   const handleRetry = () => {
-    // 쿼리에 남은 에러를 지운 뒤, Next가 에러 화면을 걷게 한다.
     resetQuery();
     reset();
   };
