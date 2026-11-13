@@ -1,0 +1,68 @@
+// ~/instagram-next/app/(auth)/_components/SignupPage.module.scss
+
+// Sass가 이 파일을 CSS로 바꿀 때 AuthForm의 규칙도 이 출력에 한 번 넣는다.
+// css-loader는 그 결과를 SignupPage.module.scss의 지역 클래스로 해싱하므로,
+// SignupForm이 이 파일만 import해도 styles.authForm, styles.formField,
+// styles.error / success, styles.authButton 같은 공통 칸 스타일을 쓸 수 있다.
+@use './AuthForm.module.scss';
+
+/* 가입 화면에만 있는 글자·버튼. 칸의 빨강/초록은 AuthForm 쪽에 있다. */
+
+// 폼 위 안내 문장. 좌우 40px로 카드 안쪽에 모으고 가운데 정렬한다.
+.signupText {
+  color: #737373;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 0 40px 10px;
+  text-align: center;  
+}
+
+// 페이스북으로 가입. 아이콘과 글자를 한 줄·가운데에 두고, 사이는 gap 8px.
+// 색·모서리는 AuthForm의 .authButton과 같은 파란 버튼이다.
+.facebookButton {
+  width: 100%;
+  padding: 7px 16px;
+  background-color: #0095f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0;  
+}
+
+// SignupForm의 개인정보 안내. 본문은 회색, 안의 「더 알아보기」만 남색 링크.
+// 중첩 a는 .privacyText 안의 a에만 적용된다.
+.privacyText {
+  color: #737373;
+  font-size: 12px;
+  line-height: 16px;
+  margin: 10px 0;
+  text-align: center;
+  
+  a{
+    color: #385185;
+    text-decoration: none;
+  }
+}
+
+// 폼 카드 아래 「계정이 있으면 로그인」 카드.
+// p는 문장 전체, a는 그 안의 로그인 링크만 파랗고 굵게.
+.loginCard {
+  p {
+    font-size: 14px;
+    margin: 15px;
+  }  
+
+  a {
+    color: #0095f6;
+    text-decoration: none;
+    font-weight: 600;
+  }
+}
