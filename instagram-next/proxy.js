@@ -11,8 +11,8 @@ export function proxy(request) {
     return NextResponse.redirect(new URL(pathname.toLowerCase(), request.url));
   }
 
-  // 로그인과 파일 주소는 프로필 검사가 필요 없다.
-  if (pathname === '/login' || pathname.includes('.')) {
+  // 로그인, 가입, 파일 주소는 프로필 검사가 필요 없다.
+  if (pathname === '/login' || pathname === '/signup' || pathname.includes('.')) {
     return;
   }
 

@@ -16,7 +16,7 @@ export default function SearchButton() {
     <button 
       type='button'
       className={styles.menuItem}
-      onclick={toggle}>
+      onClick={toggle}>
       <FaMagnifyingGlass size={24} />
       <span className={styles.menuItem}>검색</span>  
       </button>

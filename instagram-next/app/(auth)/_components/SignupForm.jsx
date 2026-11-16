@@ -1,3 +1,11 @@
+/*
+  복습: 가입이 끝나면 만든 아이디를 로그인 주소에 실어 보내기
+  핵심: 가입 성공 값의 username으로 /login?username= 주소를 만든다. 로그인 폼이 그 값을 첫 칸에 넣는다.
+  이유: 가입 직후 아이디를 다시 치게 하면, 방금 통과한 값을 사용자가 한 번 더 옮기게 된다. 주소에 실으면 로그인 화면이 그 칸을 채워 연다.
+  실행: 가입이 성공하면 onSuccess가 username을 쿼리로 붙여 /login으로 보낸다. 로그인 칸은 searchParams.get('username')으로 그 글자를 읽는다.
+  활용: 한 화면에서 만든 값을 다음 화면의 입력 초깃값으로 넘길 때 쓴다.
+*/
+
 // ~/instagram-next/app/(auth)/_components/SignupForm.jsx
 'use client';
 
@@ -86,7 +94,9 @@ export default function SignupForm() {
   const { mutate, isPending, error } = useMutation({
     mutationFn: signup,
     // 가입이 끝나면 로그인 화면으로 간다.
-    onSuccess: () => router.push('/login'),
+    // 응답의 username을 주소에 실어, 로그인 칸이 그 이름으로 시작하게 한다.
+    onSuccess: (data) =>
+      router.push(`/login?${new URLSearchParams({ username: data.username })}`),
     // 중복 확인을 통과한 뒤에 누가 먼저 가입했을 수 있다.
     // check-duplicate 쿼리를 무효화하면 useDuplicateCheck가 칸마다 다시 묻는다.
     onError: () =>

@@ -4,7 +4,7 @@ import styles from './AuthCard.module.scss';
 
 const AuthCard = ({ children, className = '', showLogo = false }) => (
   // scss의 .authCard와 이름이 같아야 카드 테두리·여백이 붙는다.
-  <div className={`${styles.authCard}${className}`}>
+  <div className={[styles.authCard, className].filter(Boolean).join(' ')}>
     {showLogo && (
       <h1 className={styles.logo}>
         <InstagramLogo />

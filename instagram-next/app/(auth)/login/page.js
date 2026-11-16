@@ -1,9 +1,20 @@
+/*
+  복습: 로그인 화면은 배치만 하고, 폼은 Suspense 안에 두기
+  핵심: 이 파일은 서버 컴포넌트다. 휴대폰 이미지와 카드만 배치하고, 입력은 LoginForm에 맡긴다.
+  이유: LoginForm이 useSearchParams를 쓴다. Suspense로 감싸지 않으면 Next가 검색 값 때문에 이 페이지 전체를 클라이언트 렌더로 미룬다.
+  실행: /login 에서 왼쪽은 휴대폰 이미지, 오른쪽 위 카드는 로그인 폼, 아래 카드는 /signup 링크다.
+  활용: 주소 값을 읽는 조각만 경계 안에 두고, 나머지 화면은 서버에서 보낼 때 쓴다.
+*/
+
 // ~/instagram-next/app/(auth)/login/page.js
 // App Router는 이 파일의 default export를 /login 화면으로 쓴다.
 import layoutStyles from '../_components/AuthLayout.module.scss';
 import styles from '../_components/LoginPage.module.scss';
 import AuthCard from '../_components/AuthCard.jsx';
 import Image from 'next/image';
+import Link from 'next/link';
+import LoginForm from '../_components/LoginForm.jsx';
+import { Suspense } from 'react';
 
 // 탭 제목. 루트 template의 %s에 들어가 「로그인 • Instagram」이 된다.
 export const metadata = {
@@ -32,34 +43,15 @@ export default function LoginPage() {
      <div className={layoutStyles.authFormContainer}>
        {/* showLogo가 true면 카드 상단에 인스타그램 로고를 그린다 */}
        <AuthCard showLogo={true}>
-         {/* noValidate: 브라우저 기본 검증 팝업을 끄고, 이후 직접 검증할 여지를 둔다 */}
-         <form
-           className={styles.authForm}
-           noValidate>
-           <div className={styles.formField}>
-             <input
-               type='text'
-               name='username'
-               placeholder='전화번호, 사용자 이름 또는 이메일'
-               required
-            />  
-          </div>
-          <div className={styles.formField}>
-            <input
-              type='password'
-              name='password'
-              placeholder='비밀번호'
-              required
-            />
-          </div>
-           {/* type="submit"이라 이 버튼이 폼 제출을 일으킨다. disabled라 아직은 누르지 못한다. */}
-           <button
-             type='submit'
-             className={styles.authButton}
-             disabled>
-             로그인  
-             </button>
-           </form>
+         <Suspense>
+           <LoginForm />
+         </Suspense>
+       </AuthCard>
+
+       <AuthCard className={styles.signupCard}>
+         <p>
+           계정이 없으신가요? <Link href='/signup'>가입하기</Link>
+         </p>
        </AuthCard>
      </div>
     </>
