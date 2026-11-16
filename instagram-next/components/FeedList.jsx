@@ -1,3 +1,11 @@
+/*
+  복습: 글 목록을 두 개씩 이어서 받기
+  핵심: postApi.getPage가 userId와 limit을 보내고, 다음 페이지부터는 cursor를 더한다.
+  이유: 첫 페이지에 cursor=null을 실으면 서버가 그 글자를 커서로 읽는다. 커서는 두 번째 요청부터 넣는다.
+  실행: 맨 아래 칸이 보이면 다음 페이지를 요청한다. hasNext가 없으면 멈춘다.
+  활용: 피드를 스크롤할 때마다 다음 글을 붙일 때 쓴다.
+*/
+
 // ~/instagram-next/components/FeedList.jsx
 // 글 목록을 두 개씩 이어서 받는다. 맨 아래가 보이면 다음 페이지를 요청한다.
 // 쿼리와 스크롤 감지는 브라우저에서만 되므로 클라이언트 컴포넌트다.
@@ -11,22 +19,21 @@ import FeedItem from './FeedItem.jsx';
 import FeedSkeleton from './FeedSkeleton.jsx';
 
 import { MY_USER_ID } from '@/utils/me.js';
+import { postApi } from '@/services/api.js';
 
 // 한 번에 받아 오는 글 수.
 const PER_PAGE = 2;
 
 // pageParam이 있으면 그 글 다음부터, 없으면 첫 페이지를 받는다.
-async function getPostPage({ pageParam }) {
-  const condition = pageParam
-    ? `limit=${PER_PAGE}&cursor=${pageParam}`
-    : `limit=${PER_PAGE}`;
-  const response = await fetch(`/api/posts?userId=${MY_USER_ID}&${condition}`);
+function getPostPage({ pageParam }) {
+  const params = { userId: MY_USER_ID, limit: PER_PAGE };
 
-  if (!response.ok) {
-    throw new Error(`게시물을 불러오지 못했어요 (${response.status})`);
+  // 첫 페이지에는 커서가 없다. null을 그대로 넣으면 주소에 cursor=null이라는 글자가 실린다.
+  if (pageParam !== null) {
+    params.cursor = pageParam;
   }
 
-  return response.json();
+  return postApi.getPage(params);
 }
 
 const FeedList = () => {

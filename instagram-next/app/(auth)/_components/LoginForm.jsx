@@ -2,7 +2,7 @@
   복습: 로그인 칸을 클라이언트 폼으로 떼고, 가입에서 넘어온 이름을 채우기
   핵심: 입력과 요청은 이 파일만 맡는다. useSearchParams가 주소의 ?username= 을 첫 값으로 넣는다.
   이유: 검색 값을 읽는 컴포넌트라 페이지 파일은 이 폼을 Suspense로 감싼다. 두 칸이 비거나 요청 중이면 버튼을 꺼 둔다.
-  실행: /login 에서 로그인하면 request('/auth/login')이 나간다. 성공하면 / 로 가고, 실패 문장은 버튼 위에 남는다. 다시 치면 reset이 그 문장을 지운다.
+  실행: /login 에서 로그인하면 authApi.login이 나간다. 성공하면 / 로 간다. 연결 실패, 401, 그 밖 실패는 errorText가 고른 문장을 버튼 위에 남긴다. 다시 치면 reset이 그 문장을 지운다.
   활용: 가입 직후 로그인 칸에 방금 만든 아이디를 미리 넣고, 비밀번호만 받게 할 때 쓴다.
 */
 
@@ -13,10 +13,21 @@ import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import styles from './LoginPage.module.scss';
-import { request } from '@/services/api.js';
+import { authApi, ApiError } from '@/services/api.js';
 
-async function login(form) {
-  return request('/auth/login', { method: 'POST', body: form });
+// 실패했을 때 보여 줄 문장은 화면이 고른다.
+function errorText(error) {
+  // 서버의 답을 받지 못했다 ㅡ fetch 가 던진 TypeError 다.
+  if (!(error instanceof ApiError)) {
+    return "서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.";
+  }
+
+  // 서버가 «그런 사용자는 없다» 고 답했으면 그 문장을 그대로 보여 준다.
+  if (error.status === 401) {
+    return error.message;
+  }
+
+  return "로그인하지 못했어요. 잠시 뒤에 다시 시도해 주세요.";
 }
 
 export default function LoginForm() {
@@ -29,7 +40,7 @@ export default function LoginForm() {
   });
 
   const { mutate, isPending, error, reset } = useMutation({
-    mutationFn: login,
+    mutationFn: authApi.login,
     // 로그인이 끝나면 피드로 간다.
     onSuccess: () => router.push('/'),
   });
@@ -78,7 +89,7 @@ export default function LoginForm() {
         />
       </div>
 
-      {error && <div className={styles.errorMessage}>{error.message}</div>}
+      {error && <div className={styles.errorMessage}>{errorText(error)}</div>}
       <button
         type='submit'
         className={styles.authButton}
