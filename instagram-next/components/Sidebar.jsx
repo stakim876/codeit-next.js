@@ -1,14 +1,13 @@
 /*
-  복습: 왼쪽 메뉴에 홈, 검색, 만들기, 내 프로필을 두기
-  핵심: 이 파일은 배치만 한다. 검색 열림은 SearchButton과 SearchPanel이, 접힘은 SidebarNav가 맡는다.
-  이유: 프로필 사진을 picsum으로 두면 사람마다 다른 그림이 나온다. 승태 메뉴는 저장해 둔 작은 사진을 쓴다.
-  실행: 홈은 /, 프로필은 /seungtae다. 검색을 누르면 패널이 열리고, 만들기 버튼은 글 창을 연다.
+  복습: 왼쪽 메뉴에 홈, 검색, 만들기, 프로필, 더 보기를 두기
+  핵심: 이 파일은 배치만 한다. 프로필은 ProfileLink가, 로그아웃은 MoreButton이 맡는다.
+  이유: 아이디와 사진을 여기 적으면 로그인한 사람이 바뀌어도 같은 메뉴가 남는다. 열림과 로그아웃은 각 버튼이 가진다.
+  실행: 홈은 /다. 검색은 패널을 열고, 만들기는 글 창을 연다. 더 보기는 메뉴 아래에 둔다.
   활용: 여러 메뉴가 각자 상태를 갖고, 부모는 칸만 나눠 줄 때 쓴다.
 */
 
 // ~/instagram-next/components/Sidebar.jsx
 import Link from 'next/link';
-import Image from 'next/image';
 import { FaHouse } from 'react-icons/fa6';
 import InstagramLogo from './InstagramLogo.jsx';
 import NavLink from './NavLink.jsx';
@@ -17,6 +16,8 @@ import SearchButton from './SearchButton.jsx';
 import SearchPanel from './SearchPanel.jsx';
 import styles from './Sidebar.module.scss';
 import SidebarNav from './SidebarNav.jsx';
+import ProfileLink from './ProfileLink.jsx';
+import MoreButton from './MoreButton.jsx';
 
 function Sidebar() {
 
@@ -45,19 +46,11 @@ function Sidebar() {
 
           <CreateButton />
 
-          <NavLink
-            href='/seungtae'
-            className={styles.menuItem}>
-            <div className={styles.profileImage}>
-              <Image
-                src='/profiles/seungtae-small.jpg'
-                alt='프로필'
-                width={40}
-                height={40}
-              />
-            </div>
-            <span className={styles.menuText}>프로필</span>
-          </NavLink>
+          <ProfileLink />
+        </div>
+
+        <div className={styles.bottomMenu}>
+          <MoreButton />
         </div>
       </SidebarNav>
 

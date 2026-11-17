@@ -2,7 +2,7 @@
   복습: 로그인, 게시물, 회원 검색 요청을 한 파일의 세 묶음으로 나누기
   핵심: request는 이 파일 안에만 둔다. 화면은 authApi, postApi, memberApi만 부른다.
   이유: 주소와 실패 처리를 컴포넌트마다 다시 적지 않게 한다. 실패는 ApiError가 상태 코드와 문장을 같이 들고 간다.
-  실행: login과 signup은 POST JSON이다. checkDuplicate, getPage, search는 쿼리 문자열이다. 좋아요는 PUT, 취소는 DELETE다. 응답이 ok가 아니면 JSON의 message를 읽고, 글자가 아니면 상태 코드 문장을 던진다.
+  실행: login, signup, logout은 POST다. me는 GET이다. checkDuplicate, getPage, search는 쿼리 문자열이다. 좋아요는 PUT, 취소는 DELETE다. 응답이 ok가 아니면 JSON의 message를 읽고, 글자가 아니면 상태 코드 문장을 던진다.
   활용: LoginForm, SignupForm, useDuplicateCheck, FeedList, SearchPanel, useLikePost가 이 함수만 쓰게 바꿀 때 쓴다.
 */
 
@@ -49,7 +49,8 @@ export const authApi = {
   signup: (form) => request('/auth/signup', { method: 'POST', body: form}),
   checkDuplicate: (type, value) => 
     request('/auth/check-duplicate', { params: { type, value } }),
-  me: () => request('/auth/me'),  
+  me: () => request('/auth/me'),
+  logout: () => request('/auth/logout', { method: 'POST' }),
 };
 
 // 피드 한 페이지와 좋아요. getPage는 쿼리, 좋아요는 PUT, 취소는 DELETE다.
