@@ -1,5 +1,5 @@
 // ~/instagram-next/proxy.js
-// 페이지를 그리기 전에 주소만 검사한다. 프로필 주소와 저장 목록에만 적용된다.
+// 페이지를 그리기 전에 주소만 검사한다. 홈, 프로필 주소, 저장 목록에 적용된다.
 import { NextResponse } from 'next/server';
 import { profiles } from '@/data/profiles.js';
 
@@ -16,6 +16,18 @@ export function proxy(request) {
     return;
   }
 
+  // 로그인 쿠키가 없으면 페이지를 그리기 전에 로그인 화면으로 보낸다. 세션이 살아 있는지는 묻지 않는다.
+  if (!request.cookies.has('sessionId')) {
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('next', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // 피드는 사용자 이름이 든 주소가 아니다. 아래 프로필 목록 확인을 건너뛴다.
+  if (pathname === '/') {
+    return;
+  }
+
   // /seungtae, /seungtae/saved의 첫 칸이 아이디다.
   const username = pathname.split('/')[1];
   const profile = profiles.find((item) => item.username === username);
@@ -28,7 +40,7 @@ export function proxy(request) {
   }
 }
 
-// 이 파일은 아이디 주소와 그 저장 목록에서만 실행된다.
+// 이 파일은 홈, 아이디 주소, 그 저장 목록에서만 실행된다.
 export const config = {
-  matcher: ['/:username', '/:username/saved'],
+  matcher: ['/', '/:username', '/:username/saved'],
 };

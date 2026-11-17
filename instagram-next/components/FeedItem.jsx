@@ -1,14 +1,12 @@
 // ~/instagram-next/components/FeedItem.jsx
 // 피드의 글 카드 하나. 위부터 작성자, 사진, 좋아요, 본문, 댓글 순이다.
 import styles from './FeedItem.module.scss';
-import carousel from './Carousel.module.scss';
 import FeedItemHeader from './FeedItemHeader.jsx';
 import FeedItemActions from './FeedItemActions.jsx';
 import FeedItemContent from './FeedItemContent.jsx';
 import FeedItemComments from './FeedItemComments.jsx';
 import CommentForm from './CommentForm.jsx';
 import CommentArea from './CommentArea.jsx';
-import Image from 'next/image';
 import Carousel from './Carousel.jsx';
 import { useLikePost } from '@/hooks/useLikePost.js';
 
@@ -24,9 +22,10 @@ const FeedItem = ({
   liked,
   commentCount,
   isFirst,
+  viewerId,
 }) => {
   // mutate가 좋아요 요청을 보낸다. isPending이면 그 요청이 아직 끝나지 않았다.
-  const { mutate, isPending } = useLikePost();
+  const { mutate, isPending } = useLikePost(viewerId);
 
   // 사진을 두 번 누르는 것은 «누르기» 만 한다 — 이미 눌렀거나 보내는 중이면 보내지 않는다.
   const likeByDoubleClick = () => {
@@ -59,6 +58,7 @@ const FeedItem = ({
         postId={postId}
         likeCount={likeCount}
         liked={liked}
+        viewerId={viewerId}
       />
 
       {/* 이름, 본문, 올린 시각 */}

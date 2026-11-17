@@ -1,8 +1,8 @@
 /*
   복습: 글 목록을 두 개씩 이어서 받기
-  핵심: postApi.getPage가 userId와 limit을 보내고, 다음 페이지부터는 cursor를 더한다.
+  핵심: postApi.getPage가 로그인한 사람의 id와 limit을 보내고, 다음 페이지부터는 cursor를 더한다.
   이유: 첫 페이지에 cursor=null을 실으면 서버가 그 글자를 커서로 읽는다. 커서는 두 번째 요청부터 넣는다.
-  실행: 맨 아래 칸이 보이면 다음 페이지를 요청한다. hasNext가 없으면 멈춘다.
+  실행: me가 오기 전에는 요청하지 않는다. 맨 아래 칸이 보이면 다음 페이지를 요청하고, 카드에는 그 사람 번호를 viewerId로 넘긴다.
   활용: 피드를 스크롤할 때마다 다음 글을 붙일 때 쓴다.
 */
 
@@ -18,15 +18,15 @@ import stateStyles from './StatusMessage.module.scss';
 import FeedItem from './FeedItem.jsx';
 import FeedSkeleton from './FeedSkeleton.jsx';
 
-import { MY_USER_ID } from '@/utils/me.js';
 import { postApi } from '@/services/api.js';
+import { useMe } from '@/hooks/useMe.js';
 
 // 한 번에 받아 오는 글 수.
 const PER_PAGE = 2;
 
 // pageParam이 있으면 그 글 다음부터, 없으면 첫 페이지를 받는다.
-function getPostPage({ pageParam }) {
-  const params = { userId: MY_USER_ID, limit: PER_PAGE };
+function getPostPage(userId, pageParam) {
+  const params = { userId, limit: PER_PAGE };
 
   // 첫 페이지에는 커서가 없다. null을 그대로 넣으면 주소에 cursor=null이라는 글자가 실린다.
   if (pageParam !== null) {
@@ -37,6 +37,8 @@ function getPostPage({ pageParam }) {
 }
 
 const FeedList = () => {
+  const { data: me } = useMe();
+
   const {
     data,
     isPending,
@@ -45,8 +47,10 @@ const FeedList = () => {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: ['posts'],
-    queryFn: getPostPage,
+    queryKey: ['posts', me?.id],
+    queryFn: ({ pageParam }) => getPostPage(me.id, pageParam),
+    // 누가 보는지 알기 전에는 보내지 않는다.
+    enabled: me !== undefined,
     initialPageParam: null, // 첫 요청에는 cursor가 없다.
     // 다음 커서는 마지막 글의 id. hasNext가 없으면 null이라 요청을 멈춘다.
     getNextPageParam: (lastPage) =>
@@ -58,8 +62,6 @@ const FeedList = () => {
 
     maxPages: 5, // 아무리 많이 스크롤해도 메모리에는 5페이지까지만 저장해
   });
-
-  console.log('data:', data);
 
   // 목록 맨 아래 칸. 이 칸이 화면에 들어오면 다음 페이지를 받는다.
   const loaderRef = useRef(null);
@@ -106,7 +108,6 @@ const FeedList = () => {
 
   // pages는 요청마다 쌓인 페이지. 그 안의 items를 한 목록으로 편다.
   const posts = data.pages.flatMap((page) => page.items);
-  console.log('posts:', posts);
 
   return (
     <>
@@ -130,6 +131,7 @@ const FeedList = () => {
             liked={post.liked}
             commentCount={post.commentCount}
             isFirst={index === 0}
+            viewerId={me.id}
           />
         ))}
       </div>

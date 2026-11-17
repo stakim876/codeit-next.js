@@ -7,6 +7,8 @@
 */
 
 // ~/instagram-next/app/api/auth/login/route.js
+import { NextResponse } from 'next/server';
+
 const ACCOUNTS = [{ username: 'seungtae', password: 'password1' }];
 
 export async function POST(request) {
@@ -18,11 +20,22 @@ export async function POST(request) {
   );
 
   if (!account) {
-    return Response.json(
+    return NextResponse.json(
       { message: '입력한 정보와 일치하는 계정이 없어요' },
       { status: 401 },
     );
   }
 
-  return Response.json({ username: account.username });
+  // proxy.js는 sessionId 쿠키가 있을 때만 홈으로 들여보낸다.
+  const response = NextResponse.json({
+    id: 3,
+    username: account.username,
+    name: '김승태',
+    profileImage: '/profiles/seungtae.jpg',
+  });
+  response.cookies.set('sessionId', account.username, {
+    httpOnly: true,
+    path: '/',
+  });
+  return response;
 }

@@ -1,23 +1,35 @@
 /*
-  복습: 로그인 칸을 클라이언트 폼으로 떼고, 가입에서 넘어온 이름을 채우기
-  핵심: 입력과 요청은 이 파일만 맡는다. useSearchParams가 주소의 ?username= 을 첫 값으로 넣는다.
-  이유: 검색 값을 읽는 컴포넌트라 페이지 파일은 이 폼을 Suspense로 감싼다. 두 칸이 비거나 요청 중이면 버튼을 꺼 둔다.
-  실행: /login 에서 로그인하면 authApi.login이 나간다. 성공하면 / 로 간다. 연결 실패, 401, 그 밖 실패는 errorText가 고른 문장을 버튼 위에 남긴다. 다시 치면 reset이 그 문장을 지운다.
-  활용: 가입 직후 로그인 칸에 방금 만든 아이디를 미리 넣고, 비밀번호만 받게 할 때 쓴다.
+  복습: 로그인에 성공하면 보던 곳으로 보내고, 실패 문장은 화면이 고르기
+  핵심: authApi.login이 성공하면 ['me']에 사용자를 넣는다. 이미 로그인한 사람이면 ?next=가 우리 주소일 때만 그곳으로 간다.
+  이유: 성공 뒤에 «나는 누구»를 다시 물으면 화면이 한 박자 늦게 바뀐다. next에 바깥 주소를 그대로 쓰면 다른 사이트로 보내진다.
+  실행: 두 칸이 차면 mutate(form)을 보낸다. 401이면 서버 문장, 연결 실패면 인터넷 안내, 그 밖은 다시 시도 문장이다. 다시 치면 reset으로 그 문장을 지운다.
+  활용: 막힌 화면으로 돌아온 사람을 원래 주소로 돌려보내고, 실패 종류마다 다른 안내를 줄 때 쓴다.
 */
 
 // ~/instagram-next/app/(auth)/_components/LoginForm.jsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import styles from './LoginPage.module.scss';
 import { authApi, ApiError } from '@/services/api.js';
+import { useMe } from '@/hooks/useMe.js';
+
+// ?next= 로 받은 주소 — 우리 사이트 안의 주소일 때만 쓰고, 아니면 피드로 간다.
+function nextPath(next) {
+  // 주소로 읽을 수 없는 값(// · https:// 처럼)이면 new URL 이 에러를 던진다 — 그때도 피드로 간다.
+  if (next === null || !URL.canParse(next, window.location.origin)) {
+    return "/";
+  }
+
+  const url = new URL(next, window.location.origin);
+  return url.origin === window.location.origin ? url.pathname + url.search : "/";
+}
 
 // 실패했을 때 보여 줄 문장은 화면이 고른다.
 function errorText(error) {
-  // 서버의 답을 받지 못했다 ㅡ fetch 가 던진 TypeError 다.
+  // 서버의 답을 받지 못했다 — fetch 가 던진 TypeError 다.
   if (!(error instanceof ApiError)) {
     return "서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.";
   }
@@ -32,7 +44,10 @@ function errorText(error) {
 
 export default function LoginForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
+  const { isSuccess: isLoggedIn } = useMe();
+
   const [form, setForm] = useState({
     // 가입하고 넘어왔으면 주소의 ?username= 으로 첫 값을 채운다.
     username: searchParams.get('username') ?? '',
@@ -41,9 +56,19 @@ export default function LoginForm() {
 
   const { mutate, isPending, error, reset } = useMutation({
     mutationFn: authApi.login,
-    // 로그인이 끝나면 피드로 간다.
-    onSuccess: () => router.push('/'),
+    // 로그인이 끝나면 보던 곳(없으면 피드)으로 간다.
+    onSuccess: (user) => {
+      // 로그인 응답의 사용자로 «나는 누구»를 채워 둔다 — 화면 전체가 곧바로 새 사람을 본다.
+      queryClient.setQueryData(['me'], user);
+    },
   });
+
+  // 로그인한 사람이면 로그인 화면에 있을 까닭이 없다 — 보던 곳(없으면 피드)으로 보낸다.
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace(nextPath(searchParams.get('next')));
+    }
+  }, [isLoggedIn, router, searchParams]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -90,6 +115,7 @@ export default function LoginForm() {
       </div>
 
       {error && <div className={styles.errorMessage}>{errorText(error)}</div>}
+
       <button
         type='submit'
         className={styles.authButton}

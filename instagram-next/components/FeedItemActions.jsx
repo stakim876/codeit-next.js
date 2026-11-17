@@ -14,10 +14,10 @@ import styles from './FeedItem.module.scss';
 import { useLikePost } from '@/hooks/useLikePost.js';
 
 
-const FeedItemActions = ({ postId, likeCount, liked }) => {
+const FeedItemActions = ({ postId, likeCount, liked, viewerId }) => {
 
   // mutate가 좋아요를 바꾸라고 보낸다. isPending이면 그 요청이 아직 끝나지 않았다.
-  const { mutate, isPending } = useLikePost();
+  const { mutate, isPending } = useLikePost(viewerId);
 
   return (
     <div className={styles.actions}>

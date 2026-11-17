@@ -49,6 +49,7 @@ export const authApi = {
   signup: (form) => request('/auth/signup', { method: 'POST', body: form}),
   checkDuplicate: (type, value) => 
     request('/auth/check-duplicate', { params: { type, value } }),
+  me: () => request('/auth/me'),  
 };
 
 // 피드 한 페이지와 좋아요. getPage는 쿼리, 좋아요는 PUT, 취소는 DELETE다.
