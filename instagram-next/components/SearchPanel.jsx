@@ -1,11 +1,3 @@
-/*
-  복습: 검색 글자로 회원을 찾아 프로필로 보내기
-  핵심: 글자가 있을 때만 memberApi.search를 부른다. 결과를 누르면 패널을 닫고 그 아이디 주소로 간다.
-  이유: 빈 칸마다 검색하면 목록 전체를 받게 된다. 사람 찾기는 이 패널이 맡고 주소는 memberApi가 맡는다.
-  실행: keyword가 빈 문자열이면 요청하지 않는다. 로딩, 오류, 없음, 목록 순으로 결과를 고른다.
-  활용: 사이드바 검색에서 사람 이름을 고르면 그 프로필로 이동할 때 쓴다.
-*/
-
 // ~/instagram-next/components/SearchPanel.jsx
 // 사이드바 옆 검색 패널. 입력한 단어로 사람을 찾아 프로필로 이동한다.
 // 입력값, 검색 요청, 열림 상태는 브라우저에서만 바뀌므로 클라이언트 컴포넌트다.
@@ -29,7 +21,7 @@ export default function SearchPanel() {
   // 검색어가 있을 때만 요청한다. 같은 keyword면 받아 둔 결과를 다시 쓴다.
   const { data, isPending, error } = useQuery({
     queryKey: ['members', keyword],
-    queryFn: () => memberApi.search(keyword),
+    queryFn: () => searchMembers(keyword),
     enabled: keyword !== '',
   });
 

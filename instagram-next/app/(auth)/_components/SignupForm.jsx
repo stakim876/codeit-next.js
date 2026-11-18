@@ -1,14 +1,7 @@
-/*
-  복습: 가입이 끝나면 만든 아이디를 로그인 주소에 실어 보내기
-  핵심: 가입 성공 값의 username으로 /login?username= 주소를 만든다. 로그인 폼이 그 값을 첫 칸에 넣는다.
-  이유: 가입 직후 아이디를 다시 치게 하면, 방금 통과한 값을 사용자가 한 번 더 옮기게 된다. 주소에 실으면 로그인 화면이 그 칸을 채워 연다.
-  실행: 가입이 성공하면 onSuccess가 username을 쿼리로 붙여 /login으로 보낸다. 로그인 칸은 searchParams.get('username')으로 그 글자를 읽는다.
-  활용: 한 화면에서 만든 값을 다음 화면의 입력 초깃값으로 넘길 때 쓴다.
-*/
+
 
 // ~/instagram-next/app/(auth)/_components/SignupForm.jsx
 'use client';
-
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -18,38 +11,43 @@ import styles from './SignupPage.module.scss';
 import { signupSchema, PHONE } from './signupSchema.js';
 import { useDuplicateCheck } from './useDuplicateCheck.js';
 import { authApi } from '@/services/api.js';
+import { CgPassword } from 'react-icons/cg';
 
+// 가입이 실패했을 때 에러 코드마다 문장을 보여 줄 입력컨 ㅡ 입력칸의 name 속성과 같다. 
+const FIELD = {
+  USERNAME_TAKEN: "username",
+  EMAIL_TAKEN: "emailOrPhone",
+  PHONE_TAKEN: "emailOrPhone",
+};
 
-// 입력칸 하나 — 칸마다 같은 마크업을 되풀이하지 않으려고 컴포넌트로 뗐다.
-function SignupField({ type, name, placeholder, value, onChange, error }) {
+function SignupField({ type, name, placeeholder, value, onChange, error }) {
   // 아무것도 안 친 칸은 빨간색도 초록색도 아니다.
   const typed = value !== "";
   const failed = typed && error !== undefined;
   const passed = typed && error === undefined;
 
   return (
-    <div
+    <div  
       className={`${styles.formField} ${failed ? styles.error : ""} ${passed ? styles.success : ""}`}
     >
-      <div className={styles.inputContainer}>
-        <input
-          type={type}
-          name={name}
-          placeholder={placeholder}
-          required
-          value={value}
-          onChange={onChange}
-        />
-        {passed &&<div className={styles.successIcon}></div>}
-        {failed &&<div className={styles.errorIcon}></div>}
-      </div>
-      {failed &&<span className={styles.errorMessage}>{error}</span>}
-    </div>
+     <div className={styles.inputContainer}>
+       <input 
+         type={type}
+         name={name}
+         placeholder={placeeholder}
+         required
+         value={value}
+         onChange={onChange}
+      />
+      {passed &&<div className={styles.successIcon}></div>}
+      {failed &&<div className={styles.errorIcon}></div>}   
+     </div> 
+     {failed &&<span className={styles.errorMessage}>{error}</span>}
+    </div>  
   );
 }
 
 export default function SignupForm() {
-
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -60,31 +58,32 @@ export default function SignupForm() {
     password: '',
   });
 
-  // 어느 칸이 바뀌었는지는 그 칸의 name 속성으로 안다.
+  // 어느 칸이 바뀌었는지는 그 칸의 name 속성으로 안다. 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm({ ...form, [name]: value });
+    // 다시 치기 시작하면 앞에서 가입이 실패한 문장을 지운다. 
+    reset();
   };
 
-
-  const { mutate, isPending, error } = useMutation({
+  const { mutate, isPending, error, reset } = useMutation({
     mutationFn: authApi.signup,
-    // 가입이 끝나면 로그인 화면으로 간다.
-    onSuccess: (data) =>
+    onSuccess: (data) => 
       router.push(`/login?${new URLSearchParams({ username: data.username })}`),
-    // 중복 확인을 통과한 뒤에 누가 먼저 가입했을 수 있다 — 칸마다 다시 묻게 한다.
-    onError: () =>
-      queryClient.invalidateQueries({ queryKey: ['check-duplicate'] }),
   });
 
+  // 가입이 실패하면 에러 코드로 문장을 보여 줄 칸을 고른다 ㅡ 표에 없는 코드만 버튼 위(form)에 보여 준다.
+  const failedField = error ? (FIELD[error.code] ?? 'form') : undefined;
+  const serverError = (name) => 
+    failedField === name ? error.message : undefined;
+  
   const handleSubmit = (event) => {
-    // 브라우저가 폼을 주소에 실어 보내는 기본 동작을 막고, 우리가 직접 보낸다.
+    // 브라우저가 폼을 주소에 실어 보내는 기본 동작을 막고, 우리가 직접 보낸다. 
     event.preventDefault();
     mutate(form);
   };
 
-
-  // 그릴 때마다 지금 입력값을 규칙에 대 본다 — 결과를 State 로 따로 들고 있지 않는다.
+  // 그럴 때마다 지금 입력값을 규칙에 대 본다 ㅡ 결과를 State 로 따로 들고 있지 않는다. 
   const result = signupSchema.safeParse(form);
   const errors = result.success ? {} : z.flattenError(result.error).fieldErrors;
 
@@ -101,68 +100,76 @@ export default function SignupForm() {
   );
 
   // 규칙은 통과했는데 누가 이미 쓰고 있으면 서버가 준 문장을 보여 준다.
-  const takenMessage = (check) =>
+  const takeMessage = (check) => 
     check?.available === false ? check.message : undefined;
 
-  const canSubmit =
+  const canSubmit = 
     result.success &&
-    contactCheck?.available === true &&
-    usernameCheck?.available === true;
+    contactCheck?.available === true && 
+    usernameCheck?.available === true; 
 
   return (
-    <form
+    <form 
       className={styles.authForm}
       onSubmit={handleSubmit}
       noValidate>
       <SignupField
         type='email'
         name='emailOrPhone'
-        placeholder='휴대폰 번호 또는 이메일 주소'
+        placeeholder='휴대폰 번호 또는 이메일 주소'
         value={form.emailOrPhone}
         onChange={handleChange}
-        error={errors.emailOrPhone?.[0] ?? takenMessage(contactCheck)}
+        error={
+          errors.emailOrPhone?.[0] ??
+          takenMessage(contactCheck) ??
+          serverError('emailOrPhone')
+        }  
         checked={contactCheck !== undefined}
       />
       <SignupField
         type='text'
         name='name'
-        placeholder='성명'
+        placeeholder='성명'
         value={form.name}
         onChange={handleChange}
         error={errors.name?.[0]}
       />
-      <SignupField
+      <SignupField    
         type='text'
         name='username'
-        placeholder='사용자 이름'
+        placeeholder='사용자 이름'
         value={form.username}
         onChange={handleChange}
-        error={errors.username?.[0] ?? takenMessage(usernameCheck)}
+        error={
+          errors.username?.[0] ??
+          takeMessage(usernameCheck) ?? 
+          serverError('username')
+        }
         checked={usernameCheck !== undefined}
       />
-      <SignupField
+      <SignupField 
         type='password'
-        name='password'
-        placeholder='비밀번호'
+        name='password'  
+        placeeholder='비밀번호'
         value={form.password}
         onChange={handleChange}
-        error={errors.password?.[0]}
+        error={errors.name?.[0]}
       />
-
+      
       <p className={styles.privacyText}>
-        저희 서비스를 이용하는 사람이 회원님의 연락처 정보를 Instagram에
-        업로드했을 수도 있습니다.
+        저희 서비스를 이용하는 사람이 회원님의 연락처 정보를 Instagram에 
+        업로드했을 수도 있습니다. 
         <a href='#'>더 알아보기</a>
       </p>
 
-      {error && <span className={styles.errorMessage}>{error.message}</span>}
+      {failedField === "form" && <span className={styles.errorMessage}>{error.message}</span>}
 
-      <button
+      <button 
         type='submit'
         className={styles.authButton}
         disabled={!canSubmit || isPending}>
-        가입
-      </button>
+        가입  
+        </button>
     </form>
-  );
+  );  
 }

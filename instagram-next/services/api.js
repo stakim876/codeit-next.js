@@ -2,17 +2,18 @@
   복습: 로그인, 게시물, 회원 검색 요청을 한 파일의 세 묶음으로 나누기
   핵심: request는 이 파일 안에만 둔다. 화면은 authApi, postApi, memberApi만 부른다.
   이유: 주소와 실패 처리를 컴포넌트마다 다시 적지 않게 한다. 실패는 ApiError가 상태 코드와 문장을 같이 들고 간다.
-  실행: login, signup, logout은 POST다. me는 GET이다. checkDuplicate, getPage, search는 쿼리 문자열이다. 좋아요는 PUT, 취소는 DELETE다. 응답이 ok가 아니면 JSON의 message를 읽고, 글자가 아니면 상태 코드 문장을 던진다.
+  실행: login, signup, logout은 POST다. me는 GET이다. checkDuplicate, getPage, search는 쿼리 문자열이다. 좋아요는 PUT, 취소는 DELETE다. 주소는 /api/v2다. 성공하면 { data }에서 값만 꺼내고, 실패하면 error.message와 error.code를 던진다.
   활용: LoginForm, SignupForm, useDuplicateCheck, FeedList, SearchPanel, useLikePost가 이 함수만 쓰게 바꿀 때 쓴다.
 */
 
 // ~/instagram-next/services/api.js
 
-// 서버가 실패로 답했을 때 던지는 에러. 상태 코드와 문장을 함께 들고 다닌다.
+// 서버가 실패로 답했을 때 던지는 에러. 상태 코드, 문장, 에러 코드를 함께 들고 다닌다.
 export class ApiError extends Error {
-  constructor(status, message) {
+  constructor(status, message, code) {
     super(message);
     this.status = status;
+    this.code = code;
   }
 }
 
@@ -28,19 +29,24 @@ async function request(path, { method, params, body } = {}) {
     options.body = JSON.stringify(body);
   }
 
-  const response = await fetch(`/api${path}${query}`, options);
+  // 새 주소(/api/v2)로 보낸다. 성공한 응답은 봉투({ data })에 담겨 온다.
+  const response = await fetch(`/api/v2${path}${query}`, options);
 
   if (!response.ok) {
     // 백엔드에 닿지 못하면 Next.js가 JSON이 아닌 글자로 답한다. 읽지 못하면 null로 둔다.
-    const data = await response.json().catch(() => null);
-    // 서버가 보낸 문장이 있으면 그것을, 없으면 상태 코드로 만든 문장을 던진다.
+    const failed = await response.json().catch(() => null);
+    const error = failed?.error;
+    // 서버가 보낸 문장이 있으면 그것을, 없으면 상태 코드로 만든 문장을 던진다. 에러 코드도 함께 싣는다.
     throw new ApiError(
       response.status,
-      data?.message ?? `요청을 처리하지 못했어요 (${response.status})`,
+      error?.message ?? `요청을 처리하지 못했어요 (${response.status})`,
+      error?.code,
     );
   }
 
-  return response.json();
+  // 봉투에서 값만 꺼내 돌려준다. 화면 쪽 코드는 봉투를 몰라도 된다.
+  const { data } = await response.json();
+  return data;
 }
 
 // 가입, 로그인, 아이디·이메일 중복 확인. 화면은 주소를 적지 않고 이 함수만 부른다.

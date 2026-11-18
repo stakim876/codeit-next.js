@@ -1,3 +1,11 @@
+/*
+  복습: 글 작성 창을 열릴 때만 붙이기
+  핵심: useUiStore에서 isCreateFeedOpen과 closeCreateFeed만 고른다. 열려 있을 때만 CreateFeedModal을 그린다.
+  이유: 스토어 전체를 받으면 다른 값이 바뀔 때도 이 컴포넌트가 다시 그려진다. 닫혀 있을 때 모달을 마운트하면 미리보기가 남는다.
+  실행: isOpen이 false면 null이다. true면 CreateFeedModal에 close를 onClose로 넘긴다.
+  활용: 사이드바 만들기가 연 창을 레이아웃 한곳에서 붙일 때 쓴다.
+*/
+
 // ~/instagram-next/components/CreateFeedModalRoot.jsx
 // 스토어를 읽는 클라이언트 컴포넌트. 글 작성 창을 붙였다 떼는 일만 한다.
 'use client';

@@ -7,6 +7,8 @@ import styles from "./CreateFeedModal.module.scss";
 import carousel from "./Carousel.module.scss";
 
 const CreateFeedModal = ({ onClose }) => {
+
+  console.log('[render] CreateFeedModal');
   // 고른 사진의 임시 주소. 없으면 고르기 화면을 보여 준다.
   const [previewUrl, setPreviewUrl] = useState(null);
   // 숨긴 file input. 버튼 클릭으로 파일 창을 연다.
@@ -32,13 +34,14 @@ const CreateFeedModal = ({ onClose }) => {
   return (
     <div className={styles.modalContainer}>
       {/* 어두운 배경을 누르면 창을 닫는다. */}
-      <div className={styles.modalBackdrop} onClick={onClose} />
+      <div className={styles.modalBackdrop} 
+      onClick={onClose} 
+      />
 
       <button
         className={styles.modalCloseButton}
         onClick={onClose}
-        type="button"
-      >
+        type="button">
         <FaXmark />
       </button>
 
@@ -76,8 +79,7 @@ const CreateFeedModal = ({ onClose }) => {
                   <button
                     className={styles.uploadButton}
                     onClick={handlePick}
-                    type="button"
-                  >
+                    type="button">
                     다른 사진 고르기
                   </button>
                 </>
