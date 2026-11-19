@@ -1,3 +1,9 @@
+# 복습: 조회, 일괄 읽음, 추가, 한 건 읽음을 순서대로 부르기
+# 핵심: 같은 호스트의 GET, PATCH, POST를 화면 없이 보낸다. 모두 읽음과 1번 읽음은 주소가 다르다.
+# 이유: 버튼의 invalidate를 빼면 서버가 정말 isRead를 바꿨는지 모른다. HTTP 파일로 GET을 반복하면 메모리 변화가 보인다.
+# 실행: 3000번 서버에서 목록 GET 뒤 모두 읽음 PATCH를 보내면 count가 돌아온다. 다시 GET하면 안 읽음이 줄어 있다. 1번 읽음은 /notifications/1/read 다.
+# 활용: mutation이 실패할 때 서버 상태와 화면 캐시 중 어디가 어긋났는지 가를 때 쓴다.
+
 ### 알림 목록
 GET http://localhost:3000/p3-13/api/notifications
 

@@ -1,3 +1,11 @@
+/*
+  복습: 다음이 있는지 알려면 한 건을 더 잘라 보기
+  핵심: 커서가 있으면 그 id보다 작은 공지만 남긴다. 없으면 최신순 전체다. PER_PAGE는 4인데 slice는 5개를 잘라, 5개가 되면 hasNext가 true이고 응답 items는 앞의 4개만 쓴다.
+  이유: 남은 개수를 따로 세지 않아도, 한 건이 더 있으면 다음 페이지가 있다는 뜻이다. 그 한 건은 이번 응답에 넣지 않아 다음 커서와 겹치지 않는다.
+  실행: 첫 GET은 id 12부터 9까지 네 건이고 hasNext true다. cursor=9면 id 8부터 4건, 이런 식으로 마지막은 id 1이 포함된 묶음이라 hasNext가 false다. 각 응답 전에 1초를 기다린다. cursor가 없으면 Number(null)은 0이라 첫 페이지 분기다.
+  활용: 번호가 감소하는 최신순 목록의 커서 페이지 API에 쓴다.
+*/
+
 // ~/next-lab/app/p3-16/practice1/api/route.js
 const notices = [
   { id: 12, title: '10월 정기 점검 안내' },

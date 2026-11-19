@@ -1,3 +1,9 @@
+# 복습: 같은 상품 API를 사용자만 바꿔 호출하기
+# 핵심: userId 쿼리가 응답의 wished만 바꾼다. 상품 이름과 wishCount는 같다.
+# 이유: 화면의 me.js가 없어 컴포넌트는 아직 로드되지 않는다. HTTP로 1번과 2번, 그리고 id 없음을 비교하면 서버 계산은 확인할 수 있다.
+# 실행: 파일의 포트는 3002다. 앱 포트가 다르면 호스트를 맞춰야 한다. userId=2는 토트백만, userId=1은 스트랩만 wished가 true다. 쿼리가 없는 GET은 전부 false다.
+# 활용: 조인 결과가 사용자마다 다른지 화면 없이 비교할 때 쓴다.
+
 ### jaehoon(2번)이 보는 상품
 GET http://localhost:3002/p3-17/practice1/api?userId=2
 

@@ -1,3 +1,11 @@
+/*
+  복습: Tailwind와 색 변수를 앱 전체에 깔기
+  핵심: @import "tailwindcss"는 유틸리티 클래스를 이 파일로 불러온다. :root의 변수는 밝은 화면 색이고, prefers-color-scheme: dark 안에서는 같은 변수 이름만 어두운 값으로 덮인다.
+  이유: 색을 클래스마다 숫자로 적으면 다크 모드에서 고칠 곳이 흩어진다. 변수 하나로 모아 두면 배경과 글자색의 기준이 한곳이다.
+  실행: layout.js가 이 파일을 불러 모든 페이지에 적용한다. @theme inline은 --color-background 같은 Tailwind 색 이름을 방금 만든 CSS 변수에 연결한다. body는 그 배경·글자색을 쓰고, font-family는 Arial 계열이라 layout이 넣은 Geist 변수와는 별개다.
+  활용: 앱 공통 색, 다크 모드, Tailwind가 클래스 이름을 알아듣게 하는 진입점에 쓴다.
+*/
+
 @import "tailwindcss";
 
 :root {

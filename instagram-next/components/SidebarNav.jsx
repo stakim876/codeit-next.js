@@ -7,7 +7,8 @@ import { useUiStore } from '@/stores/useUiStore.js';
 import styles from './Sidebar.module.scss';
 
 export default function SidebarNav({ children }) {
-  console.log('[render] SidebarNav');
+  // 렌더 확인용. 주석을 풀면 메뉴가 다시 그려질 때마다 콘솔에 찍힌다.
+  // console.log('[render] SidebarNav');
   // 검색 열림 여부와 닫기 함수. 검색 버튼이 이 값을 바꾼다.
   const isSearchOpen = useUiStore((state) => state.isSearchOpen);
   const closeSearch = useUiStore((state) => state.closeSearch);

@@ -1,3 +1,11 @@
+/*
+  복습: 모든 주소가 공유하는 바깥 틀
+  핵심: app/layout.js의 default export는 루트 레이아웃이다. children 자리에 지금 주소의 page.js가 들어간다. 주소가 바뀌어도 이 틀은 다시 만들어지지 않는다.
+  이유: html과 body를 페이지마다 적으면 글꼴과 데이터 캐시도 페이지마다 끊긴다. 바깥에 한 번만 두면 안쪽만 교체된다.
+  실행: Geist와 Geist_Mono는 글꼴 파일을 받고 className으로 CSS 변수 이름을 html에 붙인다. metadata는 브라우저 탭 제목과 설명이다. QueryProvider가 children을 감싸서, 페이지를 옮겨도 React Query 캐시가 같은 클라이언트에 남는다.
+  활용: 문서 껍데기, 전역 글꼴, 로그인 정보나 서버 상태 캐시처럼 화면이 바뀌어도 유지할 것을 둔다.
+*/
+
 // ~/next-lab/app/layout.js
 // 모든 실습 페이지를 감싼다. QueryProvider 안의 데이터는 페이지를 옮겨도 남는다.
 import { Geist, Geist_Mono } from "next/font/google";

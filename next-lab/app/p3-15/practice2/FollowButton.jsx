@@ -1,3 +1,11 @@
+/*
+  복습: 요청 전에 캐시를 고치고, 실패하면 그 이전으로 되돌리기
+  핵심: onMutate는 요청 전에 실행된다. 이전 프로필을 저장한 뒤 setQueryData로 following과 숫자를 먼저 바꾼다. onError는 저장해 둔 이전 값으로 덮어쓴다. onSuccess의 invalidate는 서버 GET으로 확정한다.
+  이유: 화면을 먼저 바꾸면 실패했을 때 되돌릴 복사본이 필요하다. getQueryData로 그 복사본을 컨텍스트에 넣어 onError의 세 번째 인자로 받는다.
+  실행: 클릭은 반대 boolean을 mutate에 넘긴다. 버튼 글자는 data.following을 바로 읽으므로 캐시가 바뀌면 팔로잉과 팔로우가 즉시 바뀐다. 서버 PUT 안의 throw를 살리면 onError가 이전 프로필로 되돌리고 빨간 문구가 나온다.
+  활용: 좋아요, 팔로우처럼 롤백이 있는 낙관적 갱신에 쓴다.
+*/
+
 // ~/next-lab/app/p3-15/practice2/FollowButton.jsx
 'use client';
 

@@ -31,7 +31,8 @@ export default function ProfileLink() {
           height={40}
         />  
         </div>
-        <span className={styles.menuItem}>프로필</span>  
+        {/* 칸은 menuItem, 글자는 menuText. 홈·만들기와 같은 글자 클래스다. */}
+        <span className={styles.menuText}>프로필</span>  
       </NavLink>
   );
 }

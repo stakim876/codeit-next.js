@@ -14,8 +14,8 @@ import { useUiStore } from '@/stores/useUiStore.js';
 import CreateFeedModal from './CreateFeedModal.jsx';
 
 export default function CreateFeedModalRoot() {
-  // 이 함수가 다시 실행될 때마다 찍힌다. 열림 값이 바뀌면 한 번 더 나온다.
-  console.log('[render] CreateFeedModalRoot');
+  // 렌더 확인용. 주석을 풀면 열림 값이 바뀔 때마다 콘솔에 찍힌다.
+  // console.log('[render] CreateFeedModalRoot');
   // 스토어 전체를 받지 않고 필요한 값만 고른다. 고른 값이 바뀔 때만 여기가 다시 그려진다.
   const isOpen = useUiStore((state) => state.isCreateFeedOpen);
   const close = useUiStore((state) => state.closeCreateFeed);

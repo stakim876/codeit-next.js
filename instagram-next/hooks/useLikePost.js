@@ -42,18 +42,26 @@ export function useLikePost(userId) {
     // 서버 응답 전에 화면을 먼저 바꾼다.
     // 진행 중인 글 조회를 끊고, 실패하면 되돌릴 캐시를 남긴다.
     onMutate: async (variables) => {
-      await queryClient.cancelQueries({ queryKey: postsKey });
-      const previousPosts = queryClient.getQueryData(postsKey);
+      try {
+        await queryClient.cancelQueries({ queryKey: postsKey });
+        const previousPosts = queryClient.getQueryData(postsKey);
+        // 화면을 먼저 바꾸기 직전의 캐시 키와 목록. 낙관적 갱신이 어느 데이터를 건드리는지 본다.
+        console.log('onMutate:', postsKey, previousPosts);
 
-      // variables.liked가 true면 개수를 1 더하고, false면 1 뺀다.
-      queryClient.setQueryData(postsKey, (data) =>
-        changePost(data, variables.postId, (post) => ({
-          liked: variables.liked,
-          likeCount: post.likeCount + (variables.liked ? 1 : -1),
-        })),
-      );
+        // variables.liked가 true면 개수를 1 더하고, false면 1 뺀다.
+        queryClient.setQueryData(postsKey, (data) =>
+          changePost(data, variables.postId, (post) => ({
+            liked: variables.liked,
+            likeCount: post.likeCount + (variables.liked ? 1 : -1),
+          })),
+        );
 
-      return { previousPosts };
+        return { previousPosts };
+      } catch (error) {
+        // catch가 받은 이름은 error다. throw e는 그 변수가 아니라서, 여기까지 오면 e를 찾지 못한다.
+        console.error('onMuate throws: ', error);
+        throw e;
+      }
     },
     onSuccess: (result, variables) => {
       // 서버가 돌려준 {liked, likeCount } 로 그 게시물만 맞춘다.

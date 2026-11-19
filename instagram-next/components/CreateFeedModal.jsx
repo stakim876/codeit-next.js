@@ -1,3 +1,11 @@
+/*
+  복습: 새 게시물 창에서 고른 사진을 미리보기
+  핵심: 파일 선택 버튼이 숨긴 input을 누르고, 고른 파일은 임시 주소로 미리보기에 넣는다. 닫기는 onClose다.
+  이유: 창을 닫는 상태는 이 컴포넌트가 갖지 않는다. 부모인 CreateFeedModalRoot가 스토어의 closeCreateFeed를 넘긴다.
+  실행: 사진이 없으면 고르기 안내가 나오고, 있으면 600 크기 미리보기와 다른 사진 고르기가 나온다. 배경이나 X를 누르면 onClose가 호출된다. 이 파일은 서버에 글을 올리지 않는다.
+  활용: 만들기 버튼으로 연 창에서 사진만 먼저 고르게 할 때 쓴다.
+*/
+
 // ~/instagram-next/components/CreateFeedModal.jsx
 // 새 게시물 창. 사진을 고르면 미리보기를 보여 주고, 닫기는 부모의 onClose에 맡긴다.
 import { useRef, useState } from "react";
@@ -8,7 +16,8 @@ import carousel from "./Carousel.module.scss";
 
 const CreateFeedModal = ({ onClose }) => {
 
-  console.log('[render] CreateFeedModal');
+  // 렌더 확인용. 주석을 풀면 이 창이 다시 그려질 때마다 콘솔에 찍힌다.
+  // console.log('[render] CreateFeedModal');
   // 고른 사진의 임시 주소. 없으면 고르기 화면을 보여 준다.
   const [previewUrl, setPreviewUrl] = useState(null);
   // 숨긴 file input. 버튼 클릭으로 파일 창을 연다.

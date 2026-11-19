@@ -2,7 +2,7 @@
 // 접힌 사이드바 오른쪽에 붙는 검색 패널.
 // 기본은 화면 밖으로 밀려 있고, open이 붙으면 들어온다.
 
-.searchPenel {
+.searchPanel {
   position: fixed; // 스크롤해도 사이드바 옆에 고정
   top: 0;
   left: 72px; // 접힌 메뉴 너비만큼 오른쪽에서 시작
@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: column; // 제목, 입력, 결과를 세로로 쌓음
   transform: translateX(-100%); // 자기 너비만큼 왼쪽으로 밀어 숨김
-  transition: transfrom 0.3s ease; // 열리고 닫힐 때 0.3초 동안 이동
+  transition: transform 0.3s ease; // 열리고 닫힐 때 0.3초 동안 이동
   
   &.open {
     transform: translateX(0); // 제자리로 돌아와 패널을 보여 줌
@@ -144,7 +144,7 @@
   gap: 12px;
   padding: 8px 24px;
   cursor: pointer;
-  transition: background-color 0.15;
+  transition: background-color 0.15s; // 배경색이 바뀌는 데 0.15초. 단위 s가 있어야 전환이 된다.
   
   &:hover {
     background-color: #f2f2f2;
@@ -206,7 +206,7 @@
 }
 
 // 결과 없음, 오류처럼 목록 대신 가운데 문구
-.emtyState {
+.emptyState {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,7 +222,7 @@
   100% { opacity: 1; }  
 }
 
-.skeletonIntem {
+.skeletonItem {
    display: flex;
    align-items: center;
    gap: 12px;

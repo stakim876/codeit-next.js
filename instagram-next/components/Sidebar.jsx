@@ -21,7 +21,8 @@ import MoreButton from './MoreButton.jsx';
 
 function Sidebar() {
 
-  console.log('[render] Sidebar');
+  // 렌더 확인용. 주석을 풀면 이 함수가 다시 실행될 때마다 콘솔에 찍힌다.
+  // console.log('[render] Sidebar');
 
   return (
     <>
