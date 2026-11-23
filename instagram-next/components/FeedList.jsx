@@ -1,6 +1,6 @@
 /*
   복습: 글 목록을 두 개씩 이어서 받기
-  핵심: postApi.getPage가 로그인한 사람의 id와 limit을 보내고, 다음 페이지부터는 cursor를 더한다.
+  핵심: postApi.getPage는 limit만 보내고, 다음 페이지부터는 cursor를 더한다. 누가 보는지는 서버가 로그인 정보로 정한다.
   이유: 첫 페이지에 cursor=null을 실으면 서버가 그 글자를 커서로 읽는다. 커서는 두 번째 요청부터 넣는다.
   실행: me가 오기 전에는 요청하지 않는다. 맨 아래 칸이 보이면 다음 페이지를 요청하고, 카드에는 그 사람 번호를 viewerId로 넘긴다.
   활용: 피드를 스크롤할 때마다 다음 글을 붙일 때 쓴다.
@@ -24,9 +24,9 @@ import { useMe } from '@/hooks/useMe.js';
 // 한 번에 받아 오는 글 수.
 const PER_PAGE = 2;
 
-// pageParam이 있으면 그 글 다음부터, 없으면 첫 페이지를 받는다.
-function getPostPage(userId, pageParam) {
- const params = { userId, limit: PER_PAGE };
+// pageParam이 있으면 그 글 다음부터, 없으면 첫 페이지를 받는다. 사람 번호는 보내지 않는다.
+function getPostPage(pageParam) {
+ const params = { limit: PER_PAGE };
  
  // 첫 페이지에는 커서가 없다 ㅡ null 을 그대로 넣으면 주소에 cursor=null 이라는 글자가 실린다.
  if (pageParam !== null) {
@@ -38,9 +38,8 @@ function getPostPage(userId, pageParam) {
 
 const FeedList = () => {
 
-  // 로그인한 사람. 이 번호가 목록 캐시 키와 요청의 userId가 된다.
+  // 로그인한 사람. 이 번호는 목록 캐시 키에만 쓰고, 요청에는 실리지 않는다.
   const { data: me } = useMe();
-
   const {
     data, 
     isPending,
@@ -49,13 +48,13 @@ const FeedList = () => {
     isFetchingNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    // 보는 사람마다 목록 캐시를 나눈다.
+     // 누가 보느냐에 따라 liked 가 달라진다 — 서버는 로그인 정보로 정하고, 화면은 보는 사람의 번호를 키에 넣는다.
     queryKey: ['posts', me?.id],
-    queryFn: ({ pageParam }) => getPostPage(me.id, pageParam),
+    queryFn: ({ pageParam }) => getPostPage(pageParam),
     // 누가 보는지 알기 전에는 보내지 않는다.
     enabled: me !== undefined,
     initialPageParam: null, // 첫 요청에는 cursor가 없다.
-    // 서버가 다음 커서를 주면 그 값으로 이어서 받는다. 없으면 요청이 멈춘다.
+    // 서버가 준 커서를 그대로 돌려준다 — 끝이면 null 이 와서 다음 페이지가 없다.
     getNextPageParam: (lastPage) => lastPage.nextCursor,
 
     // 아래를 켜면 10분간 다시 받지 않고, 창으로 돌아와도 다시 받지 않으며, 메모리에는 5페이지만 남긴다.
@@ -136,7 +135,7 @@ return (
           liked={post.liked}
           commentCount={post.commentCount}
           isFirst={index === 0} // 첫 글만 사진을 바로 불러온다.
-          viewerId={me.id} // 좋아요 요청에 쓰는 보는 사람의 번호.
+          viewerId={me.id} // 좋아요 캐시 키에 쓰는 보는 사람의 번호.
         />  
       ))}
     </div>
@@ -157,4 +156,3 @@ return (
 };  
 
 export default FeedList;
-1;
