@@ -60,7 +60,7 @@ const CreateFeedModal = ({ onClose }) => {
         </div>
 
         <div className={styles.modalBody}>
-          <div className={`${styles.step}${styles.active}`}>
+          <div className={`${styles.step} ${styles.active}`}>
             <div className={styles.uploadContainer}>
               <input
                 type="file"

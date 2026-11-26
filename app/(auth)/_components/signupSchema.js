@@ -27,9 +27,6 @@ export const signupSchema = z.object({
    password: z  
      .string()
      .min(8, { error: '비밀번호는 8자 이상이어야 해요' })
-     .refine(fitsBcrypt, {
-        error: 
-          '비밀번호가 너무 길어요. 영문은 72자, 한글은 24자까지 쓸 수 있어요',
-     }),
+     .refine(fitsBcrypt, { error: '비밀번호가 너무 길어요. 영문은 72자, 한글은 24자까지 쓸 수 있어요',}),
 });
 

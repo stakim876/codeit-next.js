@@ -19,11 +19,16 @@ function changeLike({ postId, liked }) {
 // 받아 둔 페이지들을 돌며 게시물 하나만 바꾼 새 데이터를 만든다.
 // change 는 그 게시물을 받아 바꿀 필드만 돌려주는 함수다.
 function changePost(data, postId, change) {
+  // 아직 받아 둔 목록이 없으면 pages가 없다. 그대로 읽으면 에러가 난다.
+  if (!Array.isArray(data?.pages)) {
+    return data;
+  }
+
   return {
     ...data,
     pages: data.pages.map((page) => ({
       ...page,
-      items: page.items.map((post) =>
+      items: (page.items ?? []).map((post) =>
         post.id === postId ? { ...post, ...change(post) } : post,
       ),
     })),
@@ -34,33 +39,25 @@ function changePost(data, postId, change) {
 export function useLikePost(userId) {
   const queryClient = useQueryClient();
   // 피드 목록과 같은 키 — 보는 사람의 번호까지 맞아야 같은 캐시다.
-  const postsKey = ["posts", userId];
+  const postsKey = ['posts', userId];
 
   return useMutation({
     mutationFn: changeLike,
     // 서버 응답 전에 화면을 먼저 바꾼다.
     // 진행 중인 글 조회를 끊고, 실패하면 되돌릴 캐시를 남긴다.
     onMutate: async (variables) => {
-      try {
-        await queryClient.cancelQueries({ queryKey: postsKey });
-        const previousPosts = queryClient.getQueryData(postsKey);
-        // 화면을 먼저 바꾸기 직전의 캐시 키와 목록. 낙관적 갱신이 어느 데이터를 건드리는지 본다.
-        console.log('onMutate:', postsKey, previousPosts);
+      await queryClient.cancelQueries({ queryKey: postsKey });
+      const previousPosts = queryClient.getQueryData(postsKey);
 
-        // variables.liked가 true면 개수를 1 더하고, false면 1 뺀다.
-        queryClient.setQueryData(postsKey, (data) =>
-          changePost(data, variables.postId, (post) => ({
-            liked: variables.liked,
-            likeCount: post.likeCount + (variables.liked ? 1 : -1),
-          })),
-        );
+      // variables.liked가 true면 개수를 1 더하고, false면 1 뺀다.
+      queryClient.setQueryData(postsKey, (data) =>
+        changePost(data, variables.postId, (post) => ({
+          liked: variables.liked,
+          likeCount: (post.likeCount ?? 0) + (variables.liked ? 1 : -1),
+        })),
+      );
 
-        return { previousPosts };
-      } catch (error) {
-        // catch가 받은 이름은 error다. throw e는 그 변수가 아니라서, 여기까지 오면 e를 찾지 못한다.
-        console.error('onMuate throws: ', error);
-        throw e;
-      }
+      return { previousPosts };
     },
     onSuccess: (result, variables) => {
       // 서버가 돌려준 { liked, likeCount } 로 그 게시물만 맞춘다.
@@ -69,7 +66,7 @@ export function useLikePost(userId) {
       );
     },
     onError: async (error, variables, onMutateResult) => {
-      // 남겨 둔 캐시로 화면을 되돌린다.
+      // 남겨 둔 캐시로 화면을 되돌린다. onMutate가 끝나기 전에 실패하면 되돌릴 값이 없다.
       if (onMutateResult !== undefined) {
         queryClient.setQueryData(postsKey, onMutateResult.previousPosts);
       }
