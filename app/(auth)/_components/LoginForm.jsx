@@ -1,3 +1,11 @@
+/*
+  복습: 사용자 이름과 비밀번호로 로그인하고, 실패하면 문장을 보여 주기
+  핵심: 소셜 로그인에 실패하고 돌아오면 주소의 ?error= 코드로 문장을 고른다. SOCIAL_LOGIN_FAILED는 «소셜 로그인»이다.
+  이유: 구글, 카카오, 네이버가 같은 주소로 돌아온다. 제공자마다 문장을 나누지 않는다.
+  실행: /login?error=EMAIL_TAKEN 이면 이미 가입한 이메일이라는 문장, SOCIAL_LOGIN_FAILED면 다시 시도하라는 문장이 폼에 나온다. 표에 없는 코드도 다시 시도하라는 문장이다.
+  활용: 로그인 수단이 늘어도 에러 코드 표만 화면이 읽고, 주소의 글자를 그대로 보여 주지 않을 때 쓴다.
+*/
+
 // ~/instagram-next/app/(auth)/_components/LoginForm.jsx
 "use client";
 
@@ -27,7 +35,7 @@ function errorText(error) {
 // 주소에 적힌 글자를 그대로 보여 주지 않고, 코드로 우리 문장을 고른다.
 const SOCIAL_ERRORS = {
   EMAIL_TAKEN: "이미 가입한 이메일이에요. 사용자 이름과 비밀번호로 로그인해 주세요.",
-  SOCIAL_LOGIN_FAILED: "Google 로그인을 마치지 못했어요. 다시 시도해 주세요.",
+  SOCIAL_LOGIN_FAILED: "소셜 로그인을 마치지 못했어요. 다시 시도해 주세요.",
 };
 
 function socialErrorText(code) {
